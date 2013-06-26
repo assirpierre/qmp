@@ -4,7 +4,8 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
-//grails.project.war.file = "target/${appName}-${appVersion}.war"
+grails.server.port.http = 8090
+grails.project.war.file = "/Users/assir/workspace/wars/${appName}.war"
 
 // uncomment (and adjust settings) to fork the JVM to isolate classpaths
 //grails.project.fork = [
@@ -15,7 +16,7 @@ grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
         // specify dependency exclusions here; for example, uncomment this to disable ehcache:
-        // excludes 'ehcache'
+        excludes 'ehcache'
     }
     log "error" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     checksums true // Whether to verify checksums on resolve
@@ -41,23 +42,31 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
 
-        // runtime 'mysql:mysql-connector-java:5.1.22'
+        // runtime 'mysql:mysql-connector-java:5.1.20'
+		runtime: 'postgresql:postgresql-9.2-1002.jdbc4'
+		//compile ":grails-ui:1.2.3"
+
     }
 
     plugins {
         runtime ":hibernate:$grailsVersion"
-        runtime ":jquery:1.8.3"
-        runtime ":resources:1.1.6"
+        runtime ":jquery:latest.release"
+		runtime ":jquery-ui:latest.release"
+        runtime ":resources:latest.release"
+        //runtime ":prototype:latest.release"
 
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0"
         //runtime ":cached-resources:1.0"
-        //runtime ":yui-minify-resources:0.1.5"
+        //runtime ":yui-minify-resources:0.1.4"
 
         build ":tomcat:$grailsVersion"
+        compile ":help-balloons:1.4"
 
-        runtime ":database-migration:1.3.2"
+        runtime ":database-migration:latest.release"
 
-        compile ':cache:1.0.1'
+        compile ':cache:latest.release'
+        compile ':jasper:1.6.1'
+        compile ":mail:1.0.1"
     }
 }

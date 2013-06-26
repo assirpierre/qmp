@@ -11,12 +11,16 @@ h1, h2, h3, h4, h5, h6 {
 /* BASE LAYOUT */
 
 html {
-	background-color: #ddd;
+	background-size: 100%;
+/* 	background-color: #ddd;
+ 	background-image:url(../images/back3.jpg);
 	background-image: -moz-linear-gradient(center top, #aaa, #ddd);
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #aaa), color-stop(1, #ddd));
 	background-image: linear-gradient(top, #aaa, #ddd);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr = '#aaaaaa', EndColorStr = '#dddddd');
 	background-repeat: no-repeat;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorStr = '#aaaaaa', EndColorStr = '#dddddd');
+ */
+	
 	height: 100%;
 	/* change the box model to exclude the padding from the calculation of 100% height (IE8+) */
 	-webkit-box-sizing: border-box;
@@ -25,8 +29,8 @@ html {
 }
 
 html.no-cssgradients {
-	background-color: #aaa;
-}
+/* 	background-color: #aaa;
+ */}
 
 .ie6 html {
 	height: 100%;
@@ -37,25 +41,35 @@ html * {
 }
 
 body {
-	background: #ffffff;
-	color: #333333;
+	background: transparent;
+	max-width: 100%;
+	color: #FFF;
 	margin: 0 auto;
-	max-width: 960px;
 	overflow-x: hidden; /* prevents box-shadow causing a horizontal scrollbar in firefox when viewport < 960px wide */
-	   -moz-box-shadow: 0 0 0.3em #255b17;
-	-webkit-box-shadow: 0 0 0.3em #255b17;
-	        box-shadow: 0 0 0.3em #255b17;
 }
 
-#grailsLogo {
-	background-color: #abbf78;
+#logo {
+    text-align: right;
+    color: #919395;
+    padding: 0;
+	font-weight: bold;
+	font-size: 3.5em;		
+}
+
+
+img#bg {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
 }
 
 /* replace with .no-boxshadow body if you have modernizr available */
 .ie6 body,
 .ie7 body,
 .ie8 body {
-	border-color: #255b17;
+/* 	border-color: #255b17; */
 	border-style: solid;
 	border-width: 0 1px;
 }
@@ -65,7 +79,7 @@ body {
 }
 
 a:link, a:visited, a:hover {
-	color: #48802c;
+	color: #cccccc;
 }
 
 a:hover, a:active {
@@ -73,10 +87,10 @@ a:hover, a:active {
 }
 
 h1 {
-	color: #48802c;
+	color: #FFF;
 	font-weight: normal;
 	font-size: 1.25em;
-	margin: 0.8em 0 0.3em 0;
+	margin: 0em 0 0em 0;
 }
 
 ul {
@@ -91,37 +105,55 @@ img {
 
 #grailsLogo a {
 	display: inline-block;
-	margin: 1em;
+	margin: 0em;
 }
 
 .content {
 }
 
 .content h1 {
-	border-bottom: 1px solid #CCCCCC;
-	margin: 0.8em 1em 0.3em;
-	padding: 0 0.25em;
+	border-top: solid 1px #FFF;
+	border-bottom: 1px solid #FFF;
+	padding: 0.2em 2em;
+	text-align: right;
 }
 
 .scaffold-list h1 {
-	border: none;
+	border-top: solid 2px #FFF;
+	padding: 0.2em 0.25em;
 }
 
 .footer {
-	background: #abbf78;
-	color: #000;
-	clear: both;
+    background-image: url("../images/fundo.png");
+ 	color: #fff;
 	font-size: 0.8em;
-	margin-top: 1.5em;
-	padding: 1em;
-	min-height: 1em;
+	padding: 0.5em;
+	position: fixed;
+	display: block;
+	width: 100%;
+	height: 30px;
+	bottom: 0;
+	margin-bottom: 10;	
+	box-shadow: 3px 1px 3px rgba(0, 0, 0, 0.1);
+    z-index:1000;
+    float:right;
+}
+
+.footercont{
+	float:right;
+	margin-right: 2em;
+	margin-bottom: 0.2em;
+	color: #fff;
+	display: block;
+	vertical-align:top;
+	
 }
 
 .footer a {
 	color: #255b17;
 }
 
-.spinner {
+.spinner {	
 	background: url(../images/spinner.gif) 50% 50% no-repeat transparent;
 	height: 16px;
 	width: 16px;
@@ -134,13 +166,72 @@ img {
 
 /* NAVIGATION MENU */
 
-.nav {
-	background-color: #efefef;
-	padding: 0.5em 0.75em;
+
+
+
+.navmenu li:hover                { background: #efefef; color: black; position: relative;}
+.navmenu li.hover a              { color: black; }
+.navmenu li:hover > ul 			{ visibility: visible; }
+
+.navmenu {
+/* 	padding: 0.3em 0.4em;
 	   -moz-box-shadow: 0 0 3px 1px #aaaaaa;
 	-webkit-box-shadow: 0 0 3px 1px #aaaaaa;
 	        box-shadow: 0 0 3px 1px #aaaaaa;
+ */	
+ 	padding-top: 0.5em;
+ 	padding-bottom: 0.4em;
+ 	border-top: solid 1px #FFF;
+}
+
+.navmenu ul {
+	visibility: hidden; position: absolute; background: #f6f6f6; width: 100px;
+	overflow: hidden;
+	padding-left: 0;
 	zoom: 1;
+}
+
+.navmenu li {
+	font-weight: normal; color: #000;
+	border-bottom: 0px solid #ccc; 
+	display: block;
+	float: left;
+	list-style-type: none;
+	margin-right: 0.5em;
+	padding: 0;
+}
+
+.navmenu a {	
+	color: #fff;
+	padding: 0.4em 0.5em 0.5em 0.5em;
+	text-decoration: none;
+	   -moz-border-radius: 0.3em;
+	-webkit-border-radius: 0.3em;
+	        border-radius: 0.3em;
+}
+
+.navmenu a:focus, .navmenu a:hover {
+	background-color: #999999;
+	color: #ffffff;
+	outline: none;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.no-borderradius .navmenu a:focus, .no-borderradius .navmenu a:hover {
+	background-color: transparent;
+	color: #444444;
+	text-decoration: underline;
+}
+
+
+.nav {
+	background-color: transparent;
+	padding: 0.2em 0.3em;
+	border-top: solid 1px #FFF;
+/* 	   -moz-box-shadow: 0 0 3px 1px #aaaaaa;
+	-webkit-box-shadow: 0 0 3px 1px #aaaaaa;
+	        box-shadow: 0 0 3px 1px #aaaaaa;
+ */	zoom: 1;
 }
 
 .nav ul {
@@ -158,9 +249,9 @@ img {
 }
 
 .nav a {
-	color: #666666;
+	color: #FFF;
 	display: block;
-	padding: 0.25em 0.7em;
+	padding: 0.25em 0.3em;
 	text-decoration: none;
 	   -moz-border-radius: 0.3em;
 	-webkit-border-radius: 0.3em;
@@ -168,7 +259,7 @@ img {
 }
 
 .nav a:active, .nav a:visited {
-	color: #666666;
+	color: #FFF;
 }
 
 .nav a:focus, .nav a:hover {
@@ -225,7 +316,7 @@ fieldset,
 
 .fieldcontain label,
 .fieldcontain .property-label {
-	color: #666666;
+	color: #FFF;
 	text-align: right;
 	width: 25%;
 }
@@ -261,8 +352,8 @@ select[multiple] {
 }
 
 textarea {
-	width: 250px;
-	height: 150px;
+	width: 650px;
+	height: 100px;
 	overflow: auto; /* IE always renders vertical scrollbar without this */
 	vertical-align: top;
 }
@@ -397,12 +488,20 @@ input:invalid:focus, select:invalid:focus, textarea:invalid:focus {
 }
 
 /* TABLES */
+.tablecustomizada {
+	margin: 0em 0 0.2em 0;border:none
+}
+
+.tablecustomizada th:hover, .tablecustomizada tr:hover {
+	background: transparent;
+}
 
 table {
-	border-top: 1px solid #DFDFDF;
+	border-top: 1px solid #FFF;
 	border-collapse: collapse;
 	width: 100%;
-	margin-bottom: 1em;
+	margin-bottom: 0.5em;
+	color: #fff;
 }
 
 tr {
@@ -418,22 +517,18 @@ tr>td:last-child, tr>th:last-child {
 }
 
 td, th {
+	border-top: 1px solid #FFF;
 	line-height: 1.5em;
-	padding: 0.5em 0.6em;
+	padding: 0.2em 0.3em;
 	text-align: left;
 	vertical-align: top;
 }
 
 th {
-	background-color: #efefef;
-	background-image: -moz-linear-gradient(top, #ffffff, #eaeaea);
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(1, #eaeaea));
-	    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr = '#ffffff', EndColorStr = '#eaeaea');
-	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffffff', EndColorStr='#eaeaea')";
-	color: #666666;
 	font-weight: bold;
 	line-height: 1.7em;
 	padding: 0.2em 0.6em;
+	color: #fff;
 }
 
 thead th {
@@ -457,6 +552,7 @@ th.sortable a {
 	background-position: right;
 	background-repeat: no-repeat;
 	padding-right: 1.1em;
+	color: #fff;
 }
 
 th.asc a {
@@ -468,15 +564,15 @@ th.desc a {
 }
 
 .odd {
-	background: #f7f7f7;
-}
+/* 	background: #f7f7f7;
+ */}
 
 .even {
-	background: #ffffff;
-}
+/* 	background: #ffffff;
+ */}
 
 th:hover, tr:hover {
-	background: #E1F2B6;
+	background: #999999;
 }
 
 /* PAGINATION */
@@ -486,15 +582,13 @@ th:hover, tr:hover {
 	margin: 0;
 	padding: 0.3em 0.2em;
 	text-align: center;
-	   -moz-box-shadow: 0 0 3px 1px #AAAAAA;
-	-webkit-box-shadow: 0 0 3px 1px #AAAAAA;
-	        box-shadow: 0 0 3px 1px #AAAAAA;
-	background-color: #EFEFEF;
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #FFF;
 }
 
 .pagination a,
 .pagination .currentStep {
-	color: #666666;
+	color: #FFF;
 	display: inline-block;
 	margin: 0 0.1em;
 	padding: 0.25em 0.7em;
@@ -517,26 +611,63 @@ th:hover, tr:hover {
 	background-color: transparent;
 	color: #444444;
 	text-decoration: underline;
+
+}.linkadd {
+    position: relative;
+    display: inline-block;
+
+}
+
+.linkadd a,
+.linkadd .currentStep {
+    background-image: url(../images/skin/database_add.png);
+    background-position: 0.3em center;
+    background-repeat: no-repeat;
+    text-indent: 15px;
+	color: #FFF;
+	display: inline-block;
+	margin: 0 0.1em;
+	padding: 0.25em 0.7em;
+	text-decoration: none;
+	   -moz-border-radius: 0.3em;
+	-webkit-border-radius: 0.3em;
+	        border-radius: 0.3em;
+}
+
+.linkadd a:hover, .linkadd a:focus,
+.linkadd .currentStep {
+	background-color: #999999;
+	color: #ffffff;
+	outline: none;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.no-borderradius .linkadd a:hover, .no-borderradius .linkadd a:focus,
+.no-borderradius .linkadd .currentStep {
+	background-color: transparent;
+	color: #444444;
+	text-decoration: underline;
 }
 
 /* ACTION BUTTONS */
 
 .buttons {
-	background-color: #efefef;
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #FFF;
 	overflow: hidden;
 	padding: 0.3em;
-	   -moz-box-shadow: 0 0 3px 1px #aaaaaa;
+	
+/* 	   -moz-box-shadow: 0 0 3px 1px #aaaaaa;
 	-webkit-box-shadow: 0 0 3px 1px #aaaaaa;
 	        box-shadow: 0 0 3px 1px #aaaaaa;
-	margin: 0.1em 0 0 0;
-	border: none;
+ */	margin: 0.1em 0 0 0;
 }
 
 .buttons input,
 .buttons a {
 	background-color: transparent;
 	border: 0;
-	color: #666666;
+	color: #FFF;
 	cursor: pointer;
 	display: inline-block;
 	margin: 0 0.25em 0;
@@ -567,7 +698,7 @@ th:hover, tr:hover {
 	text-decoration: underline;
 }
 
-.buttons .delete, .buttons .edit, .buttons .save {
+.buttons .delete, .buttons .edit, .buttons .save, .buttons .create, .buttons .list {
 	background-position: 0.7em center;
 	background-repeat: no-repeat;
 	text-indent: 25px;
@@ -586,6 +717,14 @@ th:hover, tr:hover {
 	background-image: url(../images/skin/database_edit.png);
 }
 
+.buttons .create {
+	background-image: url(../images/skin/database_add.png);
+}
+
+.buttons .list {
+	background-image: url(../images/skin/database_table.png);
+}
+
 .buttons .save {
 	background-image: url(../images/skin/database_save.png);
 }
@@ -593,4 +732,28 @@ th:hover, tr:hover {
 a.skip {
 	position: absolute;
 	left: -9999px;
+}
+
+.tablebody {
+	width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.tablebody th:hover, .tablebody tr:hover {
+    background: transparent;
+}
+
+.tableconteudo {
+    width: 1050px;
+    margin: 0 auto;
+    position: relative;
+    height: 100%;
+    background-image: url("../images/fundo.png");
+    border: 0;
+    overflow-x: hidden; /* prevents box-shadow causing a horizontal scrollbar in firefox when viewport < 960px wide */
+}
+
+.tableconteudo th:hover, .corpodindex tr:hover {
+    background: transparent;
 }

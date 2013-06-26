@@ -29,11 +29,13 @@ grails.mime.types = [
     xml:           ['text/xml', 'application/xml']
 ]
 
+
 // URL Mapping Cache Max Size, defaults to 5000
 //grails.urlmapping.cache.maxsize = 1000
 
 // What URL patterns should be processed by the resources plugin
 grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
+grails.gsp.enable.reload=false
 
 // The default codec used to encode data with ${}
 grails.views.default.codec = "none" // none, html, base64
@@ -62,9 +64,12 @@ grails.hibernate.cache.queries = false
 environments {
     development {
         grails.logging.jul.usebridge = true
+		jasper.dir.reports = '../reports'
     }
     production {
         grails.logging.jul.usebridge = false
+		jasper.dir.reports = '../reports'
+//        grails.serverURL = "http://www.qmenu.com.br:8080/"
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }
@@ -89,3 +94,92 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+// Added by the JQuery Validation UI plugin:
+jqueryValidationUi {
+	errorClass = 'error'
+	validClass = 'valid'
+	onsubmit = true
+	renderErrorsOnTop = false
+	
+	qTip {
+		packed = true
+	  classes = 'ui-tooltip-red ui-tooltip-shadow ui-tooltip-rounded'  
+	}
+	
+	/*
+	  Grails constraints to JQuery Validation rules mapping for client side validation.
+	  Constraint not found in the ConstraintsMap will trigger remote AJAX validation.
+	*/
+	StringConstraintsMap = [
+		blank:'required', // inverse: blank=false, required=true
+		creditCard:'creditcard',
+		email:'email',
+		inList:'inList',
+		minSize:'minlength',
+		maxSize:'maxlength',
+		size:'rangelength',
+		matches:'matches',
+		notEqual:'notEqual',
+		url:'url',
+		nullable:'required',
+		unique:'unique',
+		validator:'validator'
+	]
+	
+	// Long, Integer, Short, Float, Double, BigInteger, BigDecimal
+	NumberConstraintsMap = [
+		min:'min',
+		max:'max',
+		range:'range',
+		notEqual:'notEqual',
+		nullable:'required',
+		inList:'inList',
+		unique:'unique',
+		validator:'validator'
+	]
+	
+	CollectionConstraintsMap = [
+		minSize:'minlength',
+		maxSize:'maxlength',
+		size:'rangelength',
+		nullable:'required',
+		validator:'validator'
+	]
+	
+	DateConstraintsMap = [
+		min:'minDate',
+		max:'maxDate',
+		range:'rangeDate',
+		notEqual:'notEqual',
+		nullable:'required',
+		inList:'inList',
+		unique:'unique',
+		validator:'validator'
+	]
+	
+	ObjectConstraintsMap = [
+		nullable:'required',
+		validator:'validator'
+	]
+	
+	CustomConstraintsMap = [
+		phone:'true', // International phone number validation
+		phoneUS:'true',
+		alphanumeric:'true',
+		letterswithbasicpunc:'true',
+		lettersonly:'true'
+	]	
+}
+grails {
+    mail {
+        host = "smtp.siconweb.com.br"
+        port = 25
+        username = "suporte@siconweb.com.br"
+        password = "suporte00"
+        props = ["mail.smtp.auth":"true",
+                "mail.smtp.socketFactory.port":"25",
+                "mail.smtp.socketFactory.fallback":"false"]
+    }
+}
+

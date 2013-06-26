@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pedidoIndividual" language="groovy" pageWidth="212" pageHeight="216" columnWidth="208" leftMargin="2" rightMargin="2" topMargin="0" bottomMargin="2" isIgnorePagination="true" uuid="fe926af7-f480-4d8c-bd12-3210d8bf74d9">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<parameter name="IMAGE_DIR" class="java.lang.String"/>
+	<parameter name="SubreportDataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="mesa.label" class="java.lang.String"/>
+	<parameter name="qtde.label" class="java.lang.String"/>
+	<parameter name="preco.label" class="java.lang.String"/>
+	<parameter name="total.label" class="java.lang.String"/>
+	<parameter name="totalPedido" class="java.lang.String"/>
+	<parameter name="tempoPermanencia" class="java.lang.String"/>
+	<parameter name="data.label" class="java.lang.String"/>
+	<parameter name="permanencia.label" class="java.lang.String"/>
+	<parameter name="data" class="java.lang.String"/>
+	<parameter name="pedido.label" class="java.lang.String"/>
+	<parameter name="cabecCupom" class="java.lang.String"/>
+	<parameter name="rodapeCupom" class="java.lang.String"/>
+	<field name="mesa.numero" class="java.lang.Integer"/>
+	<field name="estab.nomefantasia" class="java.lang.String"/>
+	<field name="estab.telefone" class="java.lang.String"/>
+	<field name="pedidoCapa.nome" class="java.lang.String"/>
+	<field name="pedidoCapa.id" class="java.lang.Number"/>
+	<field name="pedidoCapa.dataFim" class="java.lang.String"/>
+	<field name="estab.endereco" class="java.lang.String"/>
+	<field name="estab.numero" class="java.lang.String"/>
+	<field name="estab.cidade" class="java.lang.String"/>
+	<field name="estab.estado" class="java.lang.String"/>
+	<field name="sequencia" class="java.lang.String"/>
+	<field name="usuario.codigo" class="java.lang.String"/>
+	<field name="observacao" class="java.lang.String"/>
+	<field name="item" class="java.lang.String"/>
+	<field name="qtde" class="java.lang.Double"/>
+	<field name="itemDescricao" class="java.lang.String"/>
+	<field name="itemAdicional" class="java.lang.String"/>
+	<field name="itemAdicionalDescricao" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="77" splitType="Stretch">
+			<textField>
+				<reportElement uuid="28df4ae7-9c54-4c61-b931-209d05283376" x="61" y="7" width="143" height="20"/>
+				<textElement textAlignment="Right" markup="none">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{cabecCupom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b60f90d3-0891-4528-a6b5-44bee52edcfa" x="179" y="67" width="25" height="10"/>
+				<textElement textAlignment="Right" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{qtde.label}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="728f92dd-ca2c-4206-a6f0-347c1e39d06d" x="2" y="49" width="107" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{mesa.label} + ": " + $F{mesa.numero} + " - " + $F{pedidoCapa.nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d0aa5e29-3cde-48b5-9444-46f139ec80a9" x="2" y="32" width="202" height="14"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estab.nomefantasia}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement uuid="0c60da24-08b1-4da2-86f8-a518f1626f07" x="2" y="3" width="59" height="24"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR} + "qmenublack.png"]]></imageExpression>
+			</image>
+			<textField pattern="">
+				<reportElement uuid="01f1c943-f69d-4e67-bcc6-2554a927be8a" x="2" y="61" width="177" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{data.label} + ": " + $P{data} + " - " +$F{usuario.codigo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2cd73c2e-4205-4410-9fa1-5d2c385c2cb1" x="109" y="49" width="95" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pedido.label} + ": " + $F{pedidoCapa.id} + " - " + $F{sequencia}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<line>
+				<reportElement uuid="9f995566-3f79-48c7-bdf5-6985987753fa" x="2" y="0" width="202" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField pattern="###0">
+				<reportElement uuid="4f7afe99-1061-4c58-b073-8ec29580f76a" x="184" y="1" width="20" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qtde}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="c073c8e1-8219-4572-8bd7-571b5b45e579" x="2" y="1" width="182" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item} +
+($F{itemDescricao}.equals("")?"":" (" + $F{itemDescricao} + ")") +
+($F{itemAdicional}.equals("")?"":"\n   AD:" + $F{itemAdicional}) +
+($F{itemAdicionalDescricao}.equals("")?"":"(" + $F{itemAdicionalDescricao} + ")") +
+($F{observacao}.equals("")?"":"\n   OBS:" + $F{observacao})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
