@@ -2,7 +2,6 @@ package qmw
 
 class Pedido {
 	int sequencia
-	int linha
 	Date dataPedido
 	Date dataAtendimento
 	int dispositivo
@@ -16,6 +15,7 @@ class Pedido {
     String itemDescricao
     String itemAdicional
     String itemAdicionalDescricao
+    String usuarioCodigo
 	boolean cupomImpresso
 	static belongsTo = [estab: Estabelecimento, usuario: Usuario, mesa: Mesa, menuPrincipal: MenuPrincipal, pedidoCapa: PedidoCapa]
 

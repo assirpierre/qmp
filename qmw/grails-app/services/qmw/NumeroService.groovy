@@ -10,7 +10,7 @@ class NumeroService {
 		}catch(Exception e){}
 		return n;
 	}
-	
+
 	def geraNumero(String numero) {
 		String retorno = "0";
 		if (numero!=null && !numero.equals(""))

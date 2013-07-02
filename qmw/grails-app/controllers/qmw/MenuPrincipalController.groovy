@@ -1,17 +1,10 @@
 package qmw
 
 class MenuPrincipalController {
-	
-	def beforeInterceptor = [action:this.&auth]
-    
+
+    def autenticaService
+    def beforeInterceptor = {autenticaService.autenticaSessao(this)}
     def scaffold=true
-	
-    def auth() {
-        if(!session.estab) {
-            redirect(controller:"Estabelecimento")
-            return false
-        }
-    }
 	
 	def list(Integer max) {
 		params.max = Math.min(max ?: 10, 100)

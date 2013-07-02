@@ -1,47 +1,53 @@
 package com.qmenu.control;
 
-import java.util.HashMap;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
-
 import com.qmenu.model.Adicionais;
-import com.qmenu.model.Item;
-import com.qmenu.util.DAO;
+import com.qmenu.util.Util;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @SuppressLint("UseSparseArrays")
 public class AdicionaisProvider {
-	
-	private static HashMap<Integer, Adicionais> l_adicionais = new HashMap<Integer, Adicionais>();
-	
-	public static void atualiza(String xml, Activity a){
-		DAO rs = new DAO(xml, a);
-		int grupo = -1;
-		Adicionais o = null;
-		while(rs.next()){
-			if(grupo != rs.getInt("grupo_adicionais_id")){
-				grupo = rs.getInt("grupo_adicionais_id");
-				o = new Adicionais();
-				o.setGrupoadicionais(rs.getString("grupo_adicionais_id"));
-				o.setDescricaoestab(rs.getString("descricaoestab"));
-				l_adicionais.put(rs.getInt("grupo_adicionais_id"),o);
-			}
-			Item item = new Item();
-			item.setCodigo(rs.getInt("codigoitem"));
-			item.setDescricao(rs.getString("descricaoitem"));
-			item.setDescricaoestab(rs.getString("descricaoestab"));
-			item.setGrupoadicionais(rs.getInt("grupo_adicionais_id"));
-			item.setPreco(rs.getDouble("preco"));
-			o.getItem().add(item);
-			ItemProvider.addItem(rs.getInt("codigoitem"), item);
-		}
+    private static HashMap<Integer, ArrayList> l_grupoAdicionais = new HashMap<Integer, ArrayList>();
+    private static ArrayList<Adicionais> adicionais = new ArrayList<Adicionais>();
+
+	public static void atualiza(String jsonStr){
+        try{
+            JSONArray jsonArray = new JSONArray(jsonStr);
+            if(jsonArray.length() > 0){
+                int grupo = 0;
+                l_grupoAdicionais = new HashMap<Integer, ArrayList>();
+                ArrayList<Adicionais> adicionais_g = new ArrayList<Adicionais>();
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject j = jsonArray.getJSONObject(i);
+                    if(j.getString("class").equals("qmw.Adicionais")){
+                        if(grupo != 0 && grupo != j.getInt("id")){
+                            l_grupoAdicionais.put(grupo, adicionais_g);
+                            adicionais_g = new ArrayList<Adicionais>();
+                            grupo = j.getInt("id");
+                        }
+                        Adicionais o = new Adicionais();
+                        o.setId(j.getInt("id"));
+                        o.setNome(Util.tostr(j.getString("nome")));
+                        o.setDescricao(Util.tostr(j.getString("descricao")));
+                        o.setGrupoAdicionaisId(j.getInt("grupoAdicionaisId"));
+                        o.setPreco(j.getDouble("preco"));
+                        adicionais.add(o);
+                        adicionais_g.add(o);
+                    }
+                }
+                l_grupoAdicionais.put(grupo, adicionais_g);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 	}
-	
-	public static HashMap<Integer, Adicionais> getAdicionais() {
-		return l_adicionais;
-	}
-	
-	public static Adicionais getItem(Integer codigo){
-		return l_adicionais.get(codigo);
-	}
+
+    public static ArrayList<Adicionais> getAdicionais(Integer grupoAdicionalId) {
+        return l_grupoAdicionais.get(grupoAdicionalId);
+    }
 }

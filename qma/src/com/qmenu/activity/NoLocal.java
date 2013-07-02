@@ -26,12 +26,8 @@ import android.widget.ListView;
 import com.google.android.maps.MapActivity;
 import com.qmenu.R;
 import com.qmenu.control.ThreadConectaWiFI;
-import com.qmenu.util.AsyncTaskCompleteListener;
-import com.qmenu.util.DAO;
-import com.qmenu.util.MyLocation;
+import com.qmenu.util.*;
 import com.qmenu.util.MyLocation.LocationResult;
-import com.qmenu.util.Util;
-import com.qmenu.util.WS;
 
 public class NoLocal extends MapActivity implements AsyncTaskCompleteListener<String>
 {    
@@ -202,13 +198,13 @@ public class NoLocal extends MapActivity implements AsyncTaskCompleteListener<St
     	if(retorno.equals("-2"))
     		Util.semConexao(this, getWS(transacao));
     	else if(retorno.indexOf("##ERRO##")==-1){
-    		DAO rs = new DAO(retorno, this);
-			if(rs.next()){
-	    		Util.gravaSessao(NoLocal.this, "estab", rs.getString("codigo"));
-	    		Util.gravaSessao(NoLocal.this, "nomeEstab", rs.getString("nomefantasia"));
-	    		startActivityForResult(new Intent(this, EstabInicio.class), 0);
-			}else
-				Util.semDados(this);	
+//    		DAO rs = new DAO(retorno, this);
+//			if(rs.next()){
+//	    		Util.gravaSessao(NoLocal.this, "estab", rs.getString("codigo"));
+//	    		Util.gravaSessao(NoLocal.this, "nomeEstab", rs.getString("nomefantasia"));
+//	    		startActivityForResult(new Intent(this, EstabInicio.class), 0);
+//			}else
+//				Util.semDados(this);
     	}
     }
 }

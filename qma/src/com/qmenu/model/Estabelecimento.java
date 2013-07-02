@@ -3,19 +3,13 @@ package com.qmenu.model;
 import com.qmenu.util.Numero;
 
 public class Estabelecimento {
-	private String codigo;
+    private int id;
 	private String nomeFantasia;
 	private String descricao;
 	private String distancia;
 	private String sistemaTrabalho;
 	private String tempo;
 
-	public String getCodigo() {
-		return codigo;
-	}
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
 	public String getNomeFantasia() {
 		return nomeFantasia;
 	}
@@ -47,4 +41,11 @@ public class Estabelecimento {
 		this.sistemaTrabalho = sistemaTrabalho;
 	}
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

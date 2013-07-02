@@ -1,19 +1,26 @@
 package com.qmenu.model;
 
-import com.qmenu.util.Data;
+import android.util.Log;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class Mesa implements Comparable<Mesa>{
-	private String id;
-    private String codigo;
+    SimpleDateFormat sdfD = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat sdfH = new SimpleDateFormat("HH:mm");
+	private int id;
+    private String numero;
 	private String nome;
 	private String situacao;
-	private String dataultsituacao;
-	public String getCodigo() {
-		return codigo;
+	private Date dataultsituacao;
+	public String getNumero() {
+		return numero;
 	}
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+	public void setNumero(String numero) {
+		this.numero = numero;
 	}
 	public String getNome() {
 		return nome;
@@ -27,38 +34,33 @@ public class Mesa implements Comparable<Mesa>{
 	public void setSituacao(String situacao) {
 		this.situacao = situacao;
 	}
-	public String getDataultsituacao() {
+	public String getDataultsituacaoF() {
+		return sdfD.format(dataultsituacao);
+	}
+	public Date getDataultsituacao() {
 		return dataultsituacao;
 	}
-	public void setDataultsituacao(String dataultsituacao) {
+
+	public void setDataultsituacao(Date dataultsituacao) {
 		this.dataultsituacao = dataultsituacao;
 	}
 	
 	public String getHora(){
-		String retorno = "";
-		try{
-			int pos = ("" + dataultsituacao).indexOf(" ");
-			if(pos>0){
-				retorno = dataultsituacao.substring(pos);
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return retorno;		
+		return sdfH.format(dataultsituacao);
 	}	
 	
 	public int compareTo(Mesa mesa) {
-		if(mesa.getSituacao().equals("D") && getSituacao().equals("O"))
+        if(mesa.getSituacao().equals("D") && getSituacao().equals("O"))
 			return -1;
 		else if(mesa.getSituacao().equals("O") && getSituacao().equals("D"))
 			return 1;
 		else
-			return Data.getDateHour(mesa.getDataultsituacao()).compareTo(Data.getDateHour(this.getDataultsituacao()));
+			return mesa.getDataultsituacao().compareTo(this.getDataultsituacao());
 	}
-	public String getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 }

@@ -20,14 +20,14 @@ import com.qmenu.R;
 import com.qmenu.control.AdicionaisProvider;
 import com.qmenu.control.PedidoProvider;
 import com.qmenu.model.Adicionais;
-import com.qmenu.model.Item;
+import com.qmenu.model.Menu;
 import com.qmenu.model.Pedido;
 import com.qmenu.util.Util;
 
 public class ListaAdicionais extends ListActivity 
 {    
 	private MenuItemAdapter m_adapter;
-	private Adicionais adicionais;
+	private ArrayList<Adicionais> l_adicionais;
 	private Pedido pedido;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,11 +35,12 @@ public class ListaAdicionais extends ListActivity
 		setContentView(R.layout.listaadicionais);
 		Util.carregaTitulo(this);
 		pedido = PedidoProvider.getPedidoAtual();
+        l_adicionais = AdicionaisProvider.getAdicionais(pedido.getItemSelecionado().getGrupoAdicionaisId());
         Button btOK = (Button) findViewById(R.id.btOK);
         btOK.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {
-        		pedido.limpaItemadd();
-        		for(Item o:adicionais.getItem())
+        		pedido.limpaAdicionais();
+        		for(Adicionais o:l_adicionais)
         			if(o.isSelecionado()){
         				pedido.addItemadd(o, true);
         				o.setSelecionado(false);
@@ -48,14 +49,13 @@ public class ListaAdicionais extends ListActivity
 	    		finish();	            		        		
         	}
         });
-        adicionais = AdicionaisProvider.getItem(pedido.getItemSelecionado().getGrupoadicionais());
         if(!pedido.getSituacao().equals("P")){
         	TextView txSelItem = (TextView)findViewById(R.id.txSelItem);
         	txSelItem.setVisibility(View.GONE);
         	btOK.setEnabled(false);
-        	this.m_adapter = new MenuItemAdapter(this, R.layout.rowitem, pedido.getL_itemadd());
+        	this.m_adapter = new MenuItemAdapter(this, R.layout.rowitem, pedido.getL_adicionais());
         }else
-        	this.m_adapter = new MenuItemAdapter(this, R.layout.rowitem, adicionais.getItem());
+        	this.m_adapter = new MenuItemAdapter(this, R.layout.rowitem, l_adicionais);
 		setListAdapter(this.m_adapter);
 	}
 	
@@ -63,11 +63,11 @@ public class ListaAdicionais extends ListActivity
 		super.onConfigurationChanged(newConfig);  
 	}
 
-	private class MenuItemAdapter extends ArrayAdapter<Item> {
-		private ArrayList<Item> item;
-		public MenuItemAdapter(Context context, int textViewResourceId,  ArrayList<Item> item) {
-			super(context, textViewResourceId, item);
-			this.item = item;
+	private class MenuItemAdapter extends ArrayAdapter<Adicionais> {
+		private ArrayList<Adicionais> adicionais;
+		public MenuItemAdapter(Context context, int textViewResourceId,  ArrayList<Adicionais> adicionais) {
+			super(context, textViewResourceId, adicionais);
+			this.adicionais = adicionais;
 		}
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = convertView;
@@ -76,11 +76,11 @@ public class ListaAdicionais extends ListActivity
 				v = vi.inflate(R.layout.rowitem, null);
 			}
 			Util.formataRow(position, v);
-			Item o = item.get(position);
+			Adicionais o = adicionais.get(position);
 			if (o != null) {
-				TextView txDescricao = (TextView) v.findViewById(R.id.descricao);
+				TextView txNome = (TextView) v.findViewById(R.id.nome);
 				TextView txPreco = (TextView) v.findViewById(R.id.preco);
-				TextView txDescricaoEstab = (TextView) v.findViewById(R.id.descricaoestab);
+				TextView txDescricao = (TextView) v.findViewById(R.id.descricao);
 				CheckBox chItem = (CheckBox)v.findViewById(R.id.chItem);
 				if(!pedido.getSituacao().equals("P"))
 					chItem.setVisibility(View.GONE);
@@ -90,16 +90,16 @@ public class ListaAdicionais extends ListActivity
 				chItem.setOnClickListener( new View.OnClickListener() {  
 					public void onClick(View v) {  
 						CheckBox cb = (CheckBox) v ;  
-						Item o = (Item) cb.getTag();  
+						Menu o = (Menu) cb.getTag();
 						o.setSelecionado(cb.isChecked());
 					}  
 				});  
-				txDescricao.setText(o.getDescricao());
+				txNome.setText(o.getNome());
 				txPreco.setText(getString(R.string.strMoeda) + " " + o.getPrecoF());
-				if(o.getDescricaoestab().equals(""))
-					txDescricaoEstab.setVisibility(View.GONE);
+				if(o.getDescricao().equals(""))
+					txDescricao.setVisibility(View.GONE);
 				else
-					txDescricaoEstab.setText(o.getDescricaoestab());
+					txDescricao.setText(o.getDescricao());
 			}
 			return v;
 		}

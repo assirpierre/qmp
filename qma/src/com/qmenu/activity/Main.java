@@ -6,15 +6,12 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.qmenu.R;
 import com.qmenu.control.MenuProvider;
-import com.qmenu.util.Http;
 import com.qmenu.util.Util;
 
 public class Main extends Activity 
@@ -50,14 +47,14 @@ public class Main extends Activity
             Util.gravaSessao(Main.this, "estab", "1");
             Util.gravaSessao(Main.this, "usuario", "demouser");
             Util.gravaSessao(Main.this, "usuario_id", "350");
-            startActivityForResult(new Intent(v.getContext(), ListaMesas.class), 0);
+            startActivityForResult(new Intent(v.getContext(), Mesa.class), 0);
         	}
         });	
                 
         btEstab = (Button) findViewById(R.id.btEstab);
         btEstab.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {
-        		startActivityForResult(new Intent(v.getContext(), ListaMesas.class), 0);		        		
+        		startActivityForResult(new Intent(v.getContext(), Mesa.class), 0);
         	}
         });
         
@@ -87,13 +84,11 @@ public class Main extends Activity
         		onStart();	    	
         	}
         });
-        Http.makeRequest(this);
-        Log.e("qmenu", Http.leURL("http://192.168.0.5:8090/qmw/menu/exporta?chave=823742jnkjdshfsa[sdf'sasd[]adf]084ASFF"));
-        boolean ping = Util.pinga();        
+        boolean ping = Util.pinga();
         if(ping==false)
         	Util.alert(this, getString(R.string.strSemConexao));        
         if(!Util.leSessao(this, "estab").equals("") && !Util.leSessao(this, "estab").equals("1") && ping)
-    		startActivityForResult(new Intent(this, ListaMesas.class), 0);
+    		startActivityForResult(new Intent(this, Mesa.class), 0);
         
     }
     

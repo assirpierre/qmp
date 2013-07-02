@@ -1,8 +1,6 @@
 package com.qmenu.activity;
 
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -17,15 +15,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.qmenu.R;
-import com.qmenu.control.EstabProvider;
-import com.qmenu.control.MenuProvider;
+import com.qmenu.control.MenuPrincipalProvider;
 import com.qmenu.control.MesaProvider;
-import com.qmenu.model.MPrincipal;
 import com.qmenu.util.AsyncTaskCompleteListener;
 import com.qmenu.util.Util;
 import com.qmenu.util.WS;
+
+import java.util.ArrayList;
 
 public class MenuPrincipal extends ListActivity implements AsyncTaskCompleteListener<String>
 {    
@@ -38,7 +35,7 @@ public class MenuPrincipal extends ListActivity implements AsyncTaskCompleteList
         Button btListaPedido = (Button) findViewById(R.id.btListaPedido);
         btListaPedido.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {
-        		startActivityForResult(new Intent(MenuPrincipal.this, ListaPedido.class), 0);            
+        		startActivityForResult(new Intent(MenuPrincipal.this, Pedido.class), 0);
         	}
         });
 
@@ -59,7 +56,7 @@ public class MenuPrincipal extends ListActivity implements AsyncTaskCompleteList
         	    builder.show();           		
         	}
         });
-		this.m_adapter = new MenuItemAdapter(this, R.layout.rowmenuprincipal, MenuProvider.getMenu());
+		this.m_adapter = new MenuItemAdapter(this, R.layout.rowmenuprincipal, MenuPrincipalProvider.getMenuPrincipal());
 		setListAdapter(this.m_adapter);
 	}
 
@@ -69,23 +66,22 @@ public class MenuPrincipal extends ListActivity implements AsyncTaskCompleteList
 
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-		Intent i = new Intent(this, MenuItem.class);
+		Intent i = new Intent(this, Menu.class);
 		Bundle bundle = new Bundle();
-		bundle.putInt("positiongrupo", position);
+		bundle.putInt("posMenuPrincipal", position);
 		i.putExtras(bundle);
 		startActivityForResult(i, 0);            
     }
 	
     private WS getWSFechaMesa(int transacao){
-    	WS ws = new WS("fechaMesa", this, this, transacao);
-    	ws.addCampo("estab",EstabProvider.getCodigo());
+    	WS ws = new WS("fechamesa", this, this, transacao);
     	ws.addCampo("mesa", Util.leSessao(this, "mesa"));
     	return ws;
     }
     
-	private class MenuItemAdapter extends ArrayAdapter<MPrincipal> {
-		private  ArrayList<MPrincipal> o;
-		public MenuItemAdapter(Context context, int textViewResourceId,  ArrayList<MPrincipal> o) {
+	private class MenuItemAdapter extends ArrayAdapter<com.qmenu.model.MenuPrincipal> {
+		private  ArrayList<com.qmenu.model.MenuPrincipal> o;
+		public MenuItemAdapter(Context context, int textViewResourceId,  ArrayList<com.qmenu.model.MenuPrincipal> o) {
 			super(context, textViewResourceId, o);
 			this.o = o;
 		}
@@ -96,22 +92,22 @@ public class MenuPrincipal extends ListActivity implements AsyncTaskCompleteList
 				v = vi.inflate(R.layout.rowmenuprincipal, null);
 			}
 			Util.formataRow(position, v);
-			MPrincipal ol = o.get(position);
-			TextView txDescricao = (TextView) v.findViewById(R.id.descricao);
-			txDescricao.setText(ol.getDescricao());
+			com.qmenu.model.MenuPrincipal ol = o.get(position);
+			TextView txNome = (TextView) v.findViewById(R.id.nome);
+			txNome.setText(ol.getNome());
 			return v;
 		}
 	}
 	
-    public void onTaskComplete(String metodo, int transacao, String retorno) {
+    public void onTaskComplete(String action, int transacao, String retorno) {
     	if(retorno.equals("-2"))
    			Util.semConexao(this, getWSFechaMesa(transacao));
-    	else if(retorno.equals("##pedidopendente##")){
+    	else if(retorno.indexOf("##pedidopendente##")>-1){
     		Util.alert(this, getString(R.string.strFechaMesaInvPedido));
-    	}else if(retorno.equals("##situacaodisponivel##")){
+    	}else if(retorno.indexOf("##situacaodisponivel##")>-1){
     		Util.alert(this, getString(R.string.strFechaMesaInvSituacao));
     	}else if(retorno.indexOf("##ERRO##")==-1){
-    		MesaProvider.atualiza(retorno, this);
+            MesaProvider.atualiza(retorno);
     		setResult(RESULT_OK, new Intent());
     		finish();
 	    }

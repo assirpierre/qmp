@@ -18,10 +18,7 @@ import android.widget.TextView;
 
 import com.qmenu.R;
 import com.qmenu.model.Estabelecimento;
-import com.qmenu.util.AsyncTaskCompleteListener;
-import com.qmenu.util.DAO;
-import com.qmenu.util.Util;
-import com.qmenu.util.WS;
+import com.qmenu.util.*;
 
 public class ListaEstabGPS extends ListActivity implements AsyncTaskCompleteListener<String>
 {    
@@ -50,7 +47,7 @@ public class ListaEstabGPS extends ListActivity implements AsyncTaskCompleteList
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         Estabelecimento estab = (Estabelecimento)this.getListAdapter().getItem(position);
-		Util.gravaSessao(this, "estab", estab.getCodigo());
+		Util.gravaSessao(this, "estab", estab.getId() + "");
 		Util.gravaSessao(this, "nomeEstab", estab.getNomeFantasia());
 		startActivityForResult(new Intent(this, EstabInicio.class), 0);
     }
@@ -95,19 +92,19 @@ public class ListaEstabGPS extends ListActivity implements AsyncTaskCompleteList
     	if(retorno.equals("-2"))
     		Util.semConexao(this, getWS(transacao));
     	else if(retorno.indexOf("##ERRO##")==-1){
-    		DAO rs = new DAO(retorno, this);
-			if(rs.next()){
-				do{
-					Estabelecimento estab = new Estabelecimento();
-					estab.setCodigo(rs.getString("codigo"));
-					estab.setNomeFantasia(rs.getString("nomeFantasia"));
-					estab.setDescricao(rs.getString("descricao"));
-					estab.setDistancia(rs.getString("distancia"));
-					estab.setTempo(rs.getString("tempo"));
-					m_adapter.add(estab);				
-				}while(rs.next());					
-			}else
-				Util.semDados(this);	
+//    		DAO rs = new DAO(retorno, this);
+//			if(rs.next()){
+//				do{
+//					Estabelecimento estab = new Estabelecimento();
+////					estab.setSequencia(rs.getString("codigo"));
+//					estab.setNomeFantasia(rs.getString("nomeFantasia"));
+//					estab.setDescricao(rs.getString("descricao"));
+//					estab.setDistancia(rs.getString("distancia"));
+//					estab.setTempo(rs.getString("tempo"));
+//					m_adapter.add(estab);
+//				}while(rs.next());
+//			}else
+//				Util.semDados(this);
     	}
     }	
 }

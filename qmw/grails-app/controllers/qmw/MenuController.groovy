@@ -1,11 +1,10 @@
 package qmw
 
-import grails.converters.JSON
-import grails.converters.XML
-
 class MenuController {
 
-	def beforeInterceptor = [action:this.&auth]
+    def autenticaService
+	def beforeInterceptor = {autenticaService.autenticaSessao(this)}
+    def numeroService
 	def scaffold=true
 
 	def list(Integer max) {
@@ -49,7 +48,7 @@ class MenuController {
 	}
 		
 	def save() {
-		def menuInstance = new Menu(params)
+        def menuInstance = new Menu(params)
 		menuInstance.setEstab(session.estab)
 		if (!menuInstance.save(flush: true)) {
 			render(view: "create", model: [menuInstance: menuInstance])
@@ -59,19 +58,4 @@ class MenuController {
 		flash.message = message(code: 'default.created.message', args: [message(code: 'menu.label', default: 'Descricao'), menuInstance.id])
 		redirect(action: "show", id: menuInstance.id)
 	}
-
-	def auth() {
-		if(!session.estab) {
-            println params['chave']
-            if(params['chave'] != "823742jnkjdshfsa[sdf'sasd[]adf]084ASFF"){
-                redirect(controller:"Estabelecimento")
-                return false
-            }
-		}
-	}
-
-    def exporta() {
-        render MenuPrincipal.where{id == 240}.list() as JSON
-//        render MenuPrincipal.where{estab.id == 218}.list() + Menu.where{estab.id == 218}.list() as XML;
-    }
 }

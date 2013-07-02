@@ -18,17 +18,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.qmenu.R;
-import com.qmenu.control.MenuProvider;
+import com.qmenu.control.MenuPrincipalProvider;
 import com.qmenu.control.PedidoProvider;
-import com.qmenu.model.Item;
-import com.qmenu.model.MPrincipal;
-import com.qmenu.model.Pedido;
 import com.qmenu.util.Util;
 
-public class MenuItem extends ListActivity 
+public class Menu extends ListActivity
 {    
 	private MenuItemAdapter m_adapter;
-	private MPrincipal mprincipal;
+	private com.qmenu.model.MenuPrincipal mprincipal;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,30 +34,30 @@ public class MenuItem extends ListActivity
         Button btListaPedido = (Button) findViewById(R.id.btListaPedido);
         btListaPedido.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {
-        		startActivityForResult(new Intent(MenuItem.this, ListaPedido.class), 0);            
+        		startActivityForResult(new Intent(Menu.this, Pedido.class), 0);
         	}
         });
         Button btSelecionaItemC = (Button) findViewById(R.id.btSelecionaItemC);
         btSelecionaItemC.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {
-                Pedido pedido = new Pedido();
-        		for(Item o:mprincipal.getItem())
+                com.qmenu.model.Pedido pedido = new com.qmenu.model.Pedido();
+        		for(com.qmenu.model.Menu o:mprincipal.getMenu())
         			if(o.isSelecionado())
         				pedido.addItem(o);
-        		if(pedido.getQtdeItem() != mprincipal.getQtdeitem())
-        			Util.alert(MenuItem.this, getString(R.string.strQtdeItemSelIncorreto).replaceAll("##S", "" + pedido.getQtdeItem()).replaceAll("##E", "" + mprincipal.getQtdeitem()));
+        		if(pedido.getQtdeItem() != mprincipal.getQtdeItem())
+        			Util.alert(Menu.this, getString(R.string.strQtdeItemSelIncorreto).replaceAll("##S", "" + pedido.getQtdeItem()).replaceAll("##E", "" + mprincipal.getQtdeItem()));
         		else
         			abrePedido(pedido);
         	}
         });
         TextView txSelItem = (TextView)findViewById(R.id.txSelItem);
-        mprincipal = MenuProvider.getMenu().get(getIntent().getExtras().getInt("positiongrupo"));
-        if( mprincipal.getQtdeitem() == 1)
+        mprincipal = MenuPrincipalProvider.getMPrincipal(getIntent().getExtras().getInt("posMenuPrincipal"));
+        if( mprincipal.getQtdeItem() == 1)
         	btSelecionaItemC.setVisibility(View.GONE);
         else
         	txSelItem.setText(R.string.strMsgSelItemMultiplo);
         	
-		this.m_adapter = new MenuItemAdapter(this, R.layout.rowitem, mprincipal.getItem(), mprincipal.getQtdeitem());
+		this.m_adapter = new MenuItemAdapter(this, R.layout.rowitem, mprincipal.getMenu(), mprincipal.getQtdeItem());
 		setListAdapter(this.m_adapter);
 	}
 	
@@ -70,12 +67,12 @@ public class MenuItem extends ListActivity
 
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Pedido pedido = new Pedido();
-        pedido.addItem((Item)this.getListAdapter().getItem(position));
+        com.qmenu.model.Pedido pedido = new com.qmenu.model.Pedido();
+        pedido.addItem((com.qmenu.model.Menu)this.getListAdapter().getItem(position));
 		abrePedido(pedido);
     }
 
-	private void abrePedido(Pedido pedido) {
+	private void abrePedido(com.qmenu.model.Pedido pedido) {
 		Intent i = null;
 		if(pedido.getQtdeItem()==1)
 			i = new Intent(this, EfetuaPedido.class);
@@ -88,10 +85,10 @@ public class MenuItem extends ListActivity
 		startActivityForResult(i, 0);
 	}
 	
-	private class MenuItemAdapter extends ArrayAdapter<Item> {
-		private ArrayList<Item> item;
+	private class MenuItemAdapter extends ArrayAdapter<com.qmenu.model.Menu> {
+		private ArrayList<com.qmenu.model.Menu> item;
 		private int qtdeItem;
-		public MenuItemAdapter(Context context, int textViewResourceId,  ArrayList<Item> item, int qtdeItem) {
+		public MenuItemAdapter(Context context, int textViewResourceId,  ArrayList<com.qmenu.model.Menu> item, int qtdeItem) {
 			super(context, textViewResourceId, item);
 			this.item = item;
 			this.qtdeItem = qtdeItem;
@@ -103,12 +100,12 @@ public class MenuItem extends ListActivity
 				v = vi.inflate(R.layout.rowitem, null);
 			}
 			Util.formataRow(position, v);
-			Item o = item.get(position);
+			com.qmenu.model.Menu o = item.get(position);
 			if (o != null) {
 				o.setSelecionado(false);
-				TextView txDescricao = (TextView) v.findViewById(R.id.descricao);
+				TextView txNome = (TextView) v.findViewById(R.id.nome);
 				TextView txPreco = (TextView) v.findViewById(R.id.preco);
-				TextView txDescricaoEstab = (TextView) v.findViewById(R.id.descricaoestab);
+				TextView txDescricao = (TextView) v.findViewById(R.id.descricao);
 				CheckBox chItem = (CheckBox)v.findViewById(R.id.chItem);
 				chItem.setTag(o);
 				if(qtdeItem == 1)
@@ -116,16 +113,17 @@ public class MenuItem extends ListActivity
 				chItem.setOnClickListener( new View.OnClickListener() {  
 					public void onClick(View v) {  
 						CheckBox cb = (CheckBox) v ;  
-						Item o = (Item) cb.getTag();  
+						com.qmenu.model.Menu o = (com.qmenu.model.Menu) cb.getTag();
 						o.setSelecionado(cb.isChecked());
 					}  
 				});  
+				txNome.setText(o.getNome());
 				txDescricao.setText(o.getDescricao());
 				txPreco.setText(getString(R.string.strMoeda) + " " + o.getPrecoF());
-				if(o.getDescricaoestab().equals(""))
-					txDescricaoEstab.setVisibility(View.GONE);
+				if(o.getDescricao().equals(""))
+					txDescricao.setVisibility(View.GONE);
 				else
-					txDescricaoEstab.setText(o.getDescricaoestab());
+					txDescricao.setText(o.getDescricao());
 			}
 			return v;
 		}

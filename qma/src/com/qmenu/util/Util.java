@@ -1,9 +1,6 @@
 package com.qmenu.util;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -92,9 +89,9 @@ public class Util {
 	
 	public static void configuraLog(Context ctx){
 		try{
-//	    	FileOutputStream fos = ctx.openFileOutput("log", Context.MODE_APPEND);
-//	    	PrintStream prsLog = new PrintStream (fos,false);
-//	    	System.setOut(prsLog);
+	    	FileOutputStream fos = ctx.openFileOutput("log", Context.MODE_APPEND);
+	    	PrintStream prsLog = new PrintStream (fos,false);
+	    	System.setOut(prsLog);
     	}catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -114,8 +111,8 @@ public class Util {
 	
 	public static boolean pinga() {		
 		try {
-			java.net.URL mandarMail = new java.net.URL("http://www.qmenu.com.br");  
-			java.net.URLConnection conn = mandarMail.openConnection();  
+			java.net.URL url = new java.net.URL("http://www.qmenu.com.br");
+			java.net.URLConnection conn = url.openConnection();
 
 			java.net.HttpURLConnection httpConn = (java.net.HttpURLConnection) conn;  
 			httpConn.connect();  
@@ -157,7 +154,7 @@ public class Util {
 		AlertDialog alert = builder.create();  
 		alert.show();
 	}
-	
+
 	public static void semDados( Activity a) {
 		Toast.makeText(a, R.string.strSemDados, Toast.LENGTH_LONG).show();
 		Intent intent = new Intent();
@@ -195,4 +192,33 @@ public class Util {
 		gravaSessao(a, "backNumber", backNumber + "");		
         return res.getDrawable(resId); 
 	}
+
+    public static String tostr(String dado){
+        String ret = "";
+        if (dado != null && !dado.equals("null"))
+            ret = dado;
+        return ret;
+    }
+
+    public static String convertStreamToString(InputStream is) {
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
 }

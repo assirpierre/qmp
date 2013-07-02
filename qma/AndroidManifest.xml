@@ -30,13 +30,13 @@
         <activity android:name="com.qmenu.activity.BuscaCEP" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
         <activity android:name="com.qmenu.activity.Login" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
         <activity android:name="com.qmenu.activity.MenuPrincipal" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
-        <activity android:name="com.qmenu.activity.MenuItem" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
+        <activity android:name=".activity.Menu" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
         <activity android:name="com.qmenu.activity.EstabInicio" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
         <activity android:name="com.qmenu.activity.ListaEstabGPS" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
         <activity android:name="com.qmenu.activity.ListaEstabCidadeNome" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
         <activity android:name="com.qmenu.activity.EfetuaPedido" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
-        <activity android:name="com.qmenu.activity.ListaPedido" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
-        <activity android:name="com.qmenu.activity.ListaMesas" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
+        <activity android:name=".activity.Pedido" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
+        <activity android:name=".activity.Mesa" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
         <activity android:name="com.qmenu.activity.EfetuaPedidoMItem" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
         <activity android:name="com.qmenu.activity.ListaAdicionais" android:configChanges="orientation|keyboard|keyboardHidden"></activity>
     </application>

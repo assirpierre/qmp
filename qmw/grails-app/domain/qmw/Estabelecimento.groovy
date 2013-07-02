@@ -22,7 +22,7 @@ class Estabelecimento {
 	double taxaServico
 	
 	static hasMany = [menuPrincipal: MenuPrincipal, usuario:Usuario, mesa:Mesa, grupoadicionais: GrupoAdicionais, 
-					  adicionais: Adicionais, menu:Menu, logDispositivo: LogDispositivo]
+					  adicionais: Adicionais, menu:Menu]
 	
 	String toString () {
 		"${nomefantasia}"

@@ -18,6 +18,8 @@ import com.qmenu.util.Data;
 import com.qmenu.util.ImageLoader;
 import com.qmenu.util.Util;
 
+import java.util.Date;
+
 public class EfetuaPedido extends Activity 
 {    
 
@@ -37,10 +39,10 @@ public class EfetuaPedido extends Activity
 		Util.carregaTitulo(this);
 		pedido = PedidoProvider.getPedidoAtual();
 		TextView txObs = (TextView) findViewById(R.id.txObs);
+		TextView txNome = (TextView) findViewById(R.id.txNome);
+		txNome.setText(pedido.getItem());
 		TextView txDescricao = (TextView) findViewById(R.id.txDescricao);
-		txDescricao.setText(pedido.getItem());
-		TextView txDescricaoEstab = (TextView) findViewById(R.id.txDescricaoEstab);
-		txDescricaoEstab.setText(pedido.getItemdescricao());
+		txDescricao.setText(pedido.getItemdescricao());
 		TextView txPrecoUnitario = (TextView) findViewById(R.id.txPrecoUnitario);
 		txPrecoUnitario.setText(getString(R.string.strPrecoUnitarioPedido) + " " + pedido.getItemSelecionado().getPrecoF());
 		txTotal = (TextView) findViewById(R.id.txTotal);		
@@ -71,7 +73,7 @@ public class EfetuaPedido extends Activity
 			}
 		});
 		Button btAdicionais = (Button) findViewById(R.id.btAdicionais);
-		if(pedido.getItemSelecionado().getGrupoadicionais() == 0)
+		if(pedido.getItemSelecionado().getGrupoAdicionaisId() != null)
 			btAdicionais.setVisibility(View.GONE);
 		btAdicionais.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {		
@@ -82,13 +84,13 @@ public class EfetuaPedido extends Activity
         btPedido.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {  
         		pedido.setObservacao(edObs.getText().toString());
-				pedido.setDatapedido(Data.getDataHoraAtual());				
+				pedido.setDatapedido(new Date());
 				PedidoProvider.gravaPedidoPendente();
 	    		setResult(RESULT_OK, new Intent());
 	    		finish();	            		        		
         	}
         });
-        if(pedido.getMprincipal().getQtdeitem()>1){
+        if(pedido.getMprincipal().getQtdeItem()>1){
         	btPedido.setVisibility(View.GONE);
         	btAdicionais.setVisibility(View.GONE);
         	downButton.setVisibility(View.GONE);
@@ -106,7 +108,7 @@ public class EfetuaPedido extends Activity
             btAdicionais.setEnabled(false);
         }
         imgView = (ImageView)findViewById(R.id.imgItem);
-        ImageLoader.getInstance().load(imgView, "http://www.qmenu.com.br:8080/upload/qmenu/" + Util.leSessao(EfetuaPedido.this, "estab") + "/" + pedido.getItemSelecionado().getCodigo() + ".jpg", false);
+        ImageLoader.getInstance().load(imgView, "http://www.qmenu.com.br:8080/upload/qmenu/" + Util.leSessao(EfetuaPedido.this, "estab") + "/" + pedido.getItemSelecionado().getId() + ".jpg", false);
 	}
 
 	public void onConfigurationChanged(Configuration newConfig) {  

@@ -3,7 +3,7 @@ package qmw
 class LogDispositivo {
 
 	int dispositivo
-	Date data
+	Date data = new Date()
 	String dados
 	static belongsTo = [estab: Estabelecimento]
 	

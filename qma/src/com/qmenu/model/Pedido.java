@@ -1,21 +1,28 @@
 package com.qmenu.model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import android.content.Context;
 import com.qmenu.util.Numero;
+import com.qmenu.util.Util;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class Pedido {
-	private String codigo;
-	private String linha;
-    private ArrayList<Item> l_item = new ArrayList<Item>();
-    private ArrayList<Item> l_itemadd = new ArrayList<Item>();
+    SimpleDateFormat sdfH = new SimpleDateFormat("HH:mm");
+    SimpleDateFormat sdfD = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	private String sequencia;
+    private ArrayList<Menu> l_menu = new ArrayList<Menu>();
+    private ArrayList<Adicionais> l_adicionais = new ArrayList<Adicionais>();
     private String item = "";
     private String itemadd = "";
     private String itemdescricao = "";
     private String itemadddescricao = "";
-    private MPrincipal mprincipal;
-	private String datapedido;
+    private MenuPrincipal mprincipal;
+	private Date datapedido;
 	private String observacao;
 	private String usuario;
 	private String situacao;
@@ -26,9 +33,9 @@ public class Pedido {
 	private int posItemSelecionado;
 
 	public String getDatapedido() {
-		return datapedido;
+		return sdfD.format(datapedido);
 	}
-	public void setDatapedido(String datapedido) {
+	public void setDatapedido(Date datapedido) {
 		this.datapedido = datapedido;
 	}
 	public String getObservacao() {
@@ -37,17 +44,11 @@ public class Pedido {
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
 	}
-	public String getCodigo() {
-		return codigo;
+	public String getSequencia() {
+		return sequencia;
 	}
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-	public String getLinha() {
-		return linha;
-	}
-	public void setLinha(String linha) {
-		this.linha = linha;
+	public void setSequencia(String sequencia) {
+		this.sequencia = sequencia;
 	}
 	public String getSituacao() {
 		return situacao;
@@ -78,58 +79,49 @@ public class Pedido {
 	}
 
 	public String getHora(){
-		String retorno = "";
-		try{
-			int pos = ("" + datapedido).indexOf(" ");
-			if(pos>0){
-				retorno = datapedido.substring(pos);
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return retorno;		
+        return sdfH.format(datapedido);
 	}
 
-	public void addItem(Item item){
-        this.item += (l_item.size() == 0?"":" - ") + item.getDescricao();
-        this.itemdescricao += (l_item.size() == 0?"":" - ") + item.getDescricaoestab();
-		l_item.add(item);
+	public void addItem(Menu menu){
+        this.item += (l_menu.size() == 0?"":" - ") + menu.getNome();
+        this.itemdescricao += (l_menu.size() == 0?"":" - ") + menu.getDescricao();
+		l_menu.add(menu);
 	}
 	
-	public void addItemadd(Item item, boolean recalcula){
-        this.itemadd += (l_itemadd.size() == 0?"":" - ") + item.getDescricao();
-        this.itemadddescricao += (l_itemadd.size() == 0?"":" - ") + item.getDescricaoestab();
-		l_itemadd.add(item);
+	public void addItemadd(Adicionais adicionais, boolean recalcula){
+        this.itemadd += (l_adicionais.size() == 0?"":" - ") + adicionais.getNome();
+        this.itemadddescricao += (l_adicionais.size() == 0?"":" - ") + adicionais.getDescricao();
+		l_adicionais.add(adicionais);
 		if(recalcula){
-			precoadicionais += item.getPreco();
+			precoadicionais += adicionais.getPreco();
 			calculaTotal();
 		}
 	}
 	
 	public int getQtdeItem(){
-		return l_item.size();
+		return l_menu.size();
 	}
 	
 	public int getQtdeItemadd(){
-		return l_itemadd.size();
+		return l_adicionais.size();
 	}
 	
-	public Item getItemSelecionado(){
-		return l_item.get(posItemSelecionado);
+	public Menu getItemSelecionado(){
+		return l_menu.get(posItemSelecionado);
 	}
 	
 	public String getDescricaoItens(){
 		String retorno = "";
-		for(int i = 0; i <l_item.size();i++)
-			retorno += (i==0?"":" / ") + l_item.get(i).getDescricao();
+		for(int i = 0; i < l_menu.size();i++)
+			retorno += (i==0?"":" / ") + l_menu.get(i).getNome();
 		return retorno;
 	}
 
-	public ArrayList<Item> getL_item() {
-		return l_item;
+	public ArrayList<Menu> getL_menu() {
+		return l_menu;
 	}
-	public void setL_item(ArrayList<Item> l_item) {
-		this.l_item = l_item;
+	public void setL_menu(ArrayList<Menu> l_menu) {
+		this.l_menu = l_menu;
 	}
 	public int getPosItemSelecionado() {
 		return posItemSelecionado;
@@ -137,24 +129,24 @@ public class Pedido {
 	public void setPosItemSelecionado(int posItemSelecionado) {
 		this.posItemSelecionado = posItemSelecionado;
 	}
-	public MPrincipal getMprincipal() {
+	public MenuPrincipal getMprincipal() {
 		return mprincipal;
 	}
-	public void setMprincipal(MPrincipal mprincipal) {
+	public void setMprincipal(MenuPrincipal mprincipal) {
 		this.mprincipal = mprincipal;
 	}
-	public void setMprincipalIni(MPrincipal mprincipal) {
+	public void setMprincipalIni(MenuPrincipal mprincipal) {
 		this.mprincipal = mprincipal;
 		qtde = 1;
-		if(mprincipal.getTipocobranca().equals("N")){
-			for(Item o:l_item){
+		if(mprincipal.getTipoCobranca().equals("N")){
+			for(Menu o: l_menu){
 				if(qtde * o.getPreco()>total)
 					total = qtde * o.getPreco();
 			}
 		}else{
-			for(Item o:l_item)
+			for(Menu o: l_menu)
 				total += qtde * o.getPreco();			
-			total = total / l_item.size();
+			total = total / l_menu.size();
 		}
 		precounitario = total;		
 		
@@ -165,10 +157,10 @@ public class Pedido {
 	public void setPrecounitario(double precounitario) {
 		this.precounitario = precounitario;
 	}
-	public void limpaItemadd(){
+	public void limpaAdicionais(){
         itemadd = "";
         itemadddescricao = "";
-		l_itemadd.clear();
+		l_adicionais.clear();
 		precoadicionais = 0;
 		calculaTotal();
 	}
@@ -178,16 +170,16 @@ public class Pedido {
 	public void setPrecoadicionais(double precoadicionais) {
 		this.precoadicionais = precoadicionais;
 	}
-	public ArrayList<Item> getL_itemadd() {
-		return l_itemadd;
+	public ArrayList<Adicionais> getL_adicionais() {
+		return l_adicionais;
 	}
-	public void setL_itemadd(ArrayList<Item> l_itemadd) {
-		this.l_itemadd = l_itemadd;
+	public void setL_adicionais(ArrayList<Adicionais> l_adicionais) {
+		this.l_adicionais = l_adicionais;
 	}
 	
-	public boolean isItemaddChecked(Item item){
-		for(Item o:l_itemadd)
-			if(o.getCodigo().equals(item.getCodigo()))
+	public boolean isItemaddChecked(Adicionais adicionais){
+		for(Adicionais o: l_adicionais)
+			if(o.getId() == adicionais.getId())
 				return true;
 		return false;
 	}
@@ -228,5 +220,31 @@ public class Pedido {
 
     public void setItem(String item) {
         this.item = item;
+    }
+
+    public JSONObject toJSON(Context ctx){
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("estab.id", Util.leSessao(ctx, "estab"));
+            obj.put("mesa.id", Util.leSessao(ctx, "mesa"));
+            obj.put("usuario.id", Util.leSessao(ctx, "usuario_id"));
+            obj.put("dispositivo", Util.leSessao(ctx, "dispositivo"));
+            obj.put("item", item);
+            obj.put("itemDescricao", itemdescricao);
+            obj.put("itemAdicional", itemadd);
+            obj.put("itemAdicionalDescricao", itemadddescricao);
+            obj.put("menuPrincipal.id", mprincipal.getId());
+            obj.put("dataPedido", sdfD.format(datapedido));
+            obj.put("observacao", observacao);
+            obj.put("usuarioCodigo", usuario);
+            obj.put("situacao", "C");
+            obj.put("qtde", qtde);
+            obj.put("precounitario", precounitario);
+            obj.put("precoadicionais", precoadicionais);
+            obj.put("total", total);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
     }
 }

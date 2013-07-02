@@ -1,8 +1,6 @@
 package com.qmenu.activity;
 
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
@@ -10,26 +8,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.qmenu.R;
 import com.qmenu.control.EstabProvider;
 import com.qmenu.control.MesaProvider;
 import com.qmenu.control.PedidoProvider;
-import com.qmenu.model.Pedido;
 import com.qmenu.util.AsyncTaskCompleteListener;
 import com.qmenu.util.Util;
 import com.qmenu.util.WS;
 
-public class ListaPedido extends ListActivity implements AsyncTaskCompleteListener<String>
+import java.util.ArrayList;
+
+public class Pedido extends ListActivity implements AsyncTaskCompleteListener<String>
 {    
 	private MenuItemAdapter m_adapter;
 	private Button btConfPedido;
@@ -43,11 +37,11 @@ public class ListaPedido extends ListActivity implements AsyncTaskCompleteListen
 		btConfPedido = (Button) findViewById(R.id.btConfPedido);
     	btConfPedido.setOnClickListener(new View.OnClickListener() {
     		public void onClick(View v) {
-        		AlertDialog.Builder builder = new AlertDialog.Builder(ListaPedido.this);
+        		AlertDialog.Builder builder = new AlertDialog.Builder(Pedido.this);
         	    builder.setMessage(getString(R.string.strConfirmPedido));
         	    builder.setPositiveButton(R.string.strBtAlertOK, new DialogInterface.OnClickListener() {
         	    	public void onClick(DialogInterface dialog, int id) {
-		        		getWSConfirmaPedido(0).execute();	    		        
+		        	getWSConfirmaPedido(0).execute();
         	    	}
         	    });
         	    builder.setNegativeButton(R.string.strBtAlertCancela, new DialogInterface.OnClickListener() {
@@ -69,7 +63,7 @@ public class ListaPedido extends ListActivity implements AsyncTaskCompleteListen
 
 	private void carrega(boolean todos) {
 		if(todos || PedidoProvider.getPedidoPendente().size() == 0){
-        	getWSListaPedido(todos?"getTodosPedidos":"getUltPedido", 0).execute();
+        	getWSListaPedido(todos?"listatodospedidos":"listaultimopedido", 0).execute();
         	btConfPedido.setVisibility(View.INVISIBLE);			        	
         	pendente = false;
         }else{
@@ -83,7 +77,7 @@ public class ListaPedido extends ListActivity implements AsyncTaskCompleteListen
 	
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        Pedido pedido = (Pedido)this.getListAdapter().getItem(position);
+        com.qmenu.model.Pedido pedido = (com.qmenu.model.Pedido)this.getListAdapter().getItem(position);
 		Intent i = null;
 		if(pedido.getQtdeItem()==1)
 			i = new Intent(this, EfetuaPedido.class);
@@ -107,26 +101,20 @@ public class ListaPedido extends ListActivity implements AsyncTaskCompleteListen
         }
     }
     
-	private WS getWSListaPedido(String metodo, int transacao){		
-    	WS ws = new WS(metodo, this, this, transacao);
-    	ws.addCampo("estab",EstabProvider.getCodigo());
+	private WS getWSListaPedido(String action, int transacao){
+    	WS ws = new WS(action, this, this, transacao);
     	ws.addCampo("mesa", Util.leSessao(this, "mesa"));
     	return ws;
 	}
 
 	private WS getWSConfirmaPedido(int transacao){
-    	WS ws = new WS("gravaPedido", this, this, transacao);
-    	ws.addCampo("estab",EstabProvider.getCodigo());
-    	ws.addCampo("usuario", Util.leSessao(this, "usuario_id"));
-    	ws.addCampo("mesa", Util.leSessao(this, "mesa"));
-    	ws.addCampo("pedidos", PedidoProvider.getXMLPedidoPendente());
-    	return ws;
+    	return new WS("gravapedido", PedidoProvider.getPedidosPendentes(this), this, this, transacao);
 	}
 	
-	private class MenuItemAdapter extends ArrayAdapter<Pedido> {
-		private ArrayList<Pedido> pedido;
+	private class MenuItemAdapter extends ArrayAdapter<com.qmenu.model.Pedido> {
+		private ArrayList<com.qmenu.model.Pedido> pedido;
 
-		public MenuItemAdapter(Context context, int textViewResourceId,  ArrayList<Pedido> o) {
+		public MenuItemAdapter(Context context, int textViewResourceId,  ArrayList<com.qmenu.model.Pedido> o) {
 			super(context, textViewResourceId, o);
 			this.pedido = o;
 		}
@@ -137,13 +125,13 @@ public class ListaPedido extends ListActivity implements AsyncTaskCompleteListen
 				v = vi.inflate(R.layout.rowlistapedido, null);
 			}
 			Util.formataRow(position, v);
-			Pedido o = pedido.get(position);
+			com.qmenu.model.Pedido o = pedido.get(position);
 			if (o != null) {
 				TextView txItem = (TextView) v.findViewById(R.id.txItem);
 				TextView txSituacao = (TextView) v.findViewById(R.id.txSituacao);
 				TextView txQtde = (TextView) v.findViewById(R.id.txQtde);
 				TextView txTotal = (TextView) v.findViewById(R.id.txTotal);
-				txItem.setText(o.getHora() + " - " + o.getDescricaoItens());
+				txItem.setText(o.getHora() + " - " + o.getItem());
 				Button btDelete = (Button) v.findViewById(R.id.btDel);
 				if(o.getSituacao().equals("P"))
 					txSituacao.setText(getString(R.string.strSituacaoPedidoP));
@@ -160,16 +148,16 @@ public class ListaPedido extends ListActivity implements AsyncTaskCompleteListen
 		        btDelete.setTag(o);
 		        btDelete.setOnClickListener(new View.OnClickListener() {
 		        	public void onClick(View v) {
-		        		confirmaDelecao((Pedido)v.getTag());
+		        		confirmaDelecao((com.qmenu.model.Pedido)v.getTag());
 		        	}
 		        });
 			}
 			return v;
 		}
 			    
-		private void confirmaDelecao(final Pedido pedido) {
+		private void confirmaDelecao(final com.qmenu.model.Pedido pedido) {
     		if(pedido.getSituacao().equals("P")){
-        		AlertDialog.Builder builder = new AlertDialog.Builder(ListaPedido.this);
+        		AlertDialog.Builder builder = new AlertDialog.Builder(Pedido.this);
         	    builder.setMessage(getString(R.string.strConfirmDelPedido) + " " + pedido.getDescricaoItens());
         	    builder.setPositiveButton(R.string.strBtAlertOK, new DialogInterface.OnClickListener() {
         	    	public void onClick(DialogInterface dialog, int id) {
@@ -184,25 +172,25 @@ public class ListaPedido extends ListActivity implements AsyncTaskCompleteListen
         	    });
         	    builder.show();
     		}else
-    			Toast.makeText(ListaPedido.this, R.string.strPedidoAlteracaoNegada, Toast.LENGTH_LONG).show();
+    			Toast.makeText(Pedido.this, R.string.strPedidoAlteracaoNegada, Toast.LENGTH_LONG).show();
 		}		
 	}
 	
-    public void onTaskComplete(String metodo, int transacao, String retorno) {
+    public void onTaskComplete(String action, int transacao, String retorno) {
     	if(retorno.equals("-2"))
-    		if(metodo.equals("gravaPedido"))
+    		if(action.equals("gravapedido"))
     			Util.semConexao(this, getWSConfirmaPedido(transacao));
     		else
-    			Util.semConexao(this, getWSListaPedido(metodo, transacao));
+    			Util.semConexao(this, getWSListaPedido(action, transacao));
     	else if(retorno.indexOf("##ERRO##")==-1){
-    		if(metodo.equals("gravaPedido")){
+    		if(action.equals("gravapedido")){
     			if(retorno.equals("")){
     				Util.alert(this, getString(R.string.strSemConexao));
     			}else{
 	    			PedidoProvider.limpaPendente();
-	    			MesaProvider.atualiza(retorno, this);
-	    			Toast.makeText(ListaPedido.this, R.string.strPedidoConfirmado, Toast.LENGTH_LONG).show();
-					Intent i = new Intent(ListaPedido.this, ListaMesas.class);
+	    			MesaProvider.atualiza(retorno);
+	    			Toast.makeText(Pedido.this, R.string.strPedidoConfirmado, Toast.LENGTH_LONG).show();
+					Intent i = new Intent(Pedido.this, Mesa.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivityForResult(i, 0);
     			}

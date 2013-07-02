@@ -2,7 +2,8 @@ package qmw
 
 class GrupoAdicionaisController {
 
-	def beforeInterceptor = [action:this.&auth]
+    def autenticaService
+    def beforeInterceptor = {autenticaService.autenticaSessao(this)}
 	def scaffold=true
 
 	def list(Integer max) {
@@ -43,12 +44,5 @@ class GrupoAdicionaisController {
 
 		flash.message = message(code: 'default.created.message', args: [message(code: 'grupoAdicionais.label', default: 'Descricao'), grupoadicionaisInstance.id])
 		redirect(action: "show", id: grupoadicionaisInstance.id)
-	}
-
-	def auth() {
-		if(!session.estab) {
-            redirect(controller:"Estabelecimento")
-			return false
-		}
 	}
 }

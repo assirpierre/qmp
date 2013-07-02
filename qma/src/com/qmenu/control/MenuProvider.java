@@ -1,57 +1,58 @@
 package com.qmenu.control;
 
+import android.annotation.SuppressLint;
+import com.qmenu.model.Menu;
+import com.qmenu.model.MenuPrincipal;
+import com.qmenu.util.Util;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-
-import com.qmenu.model.Item;
-import com.qmenu.model.MPrincipal;
-import com.qmenu.util.DAO;
-
 public class MenuProvider {
 	
-	private static ArrayList<MPrincipal> menu = new ArrayList<MPrincipal>();
+	private static ArrayList<MenuPrincipal> menu = new ArrayList<MenuPrincipal>();
 	@SuppressLint("UseSparseArrays")
-	private static HashMap<Integer, MPrincipal> h_menu = new HashMap<Integer, MPrincipal>();
+	private static HashMap<Integer, MenuPrincipal> h_menu = new HashMap<Integer, MenuPrincipal>();
 	
-	public static void atualiza(String xml, Activity a){
-		DAO rs = new DAO(xml, a);
-		if(rs.next()){
-			menu = new ArrayList<MPrincipal>();
-			MPrincipal mprincipal = null;
-			do{
-				if(mprincipal == null || !mprincipal.getCodigo().equals(rs.getString("codigogrupo"))){
-					mprincipal = new MPrincipal();
-					mprincipal.setCodigo(rs.getString("codigogrupo"));
-					mprincipal.setDescricao(rs.getString("descricaogrupo"));
-					mprincipal.setTipocobranca(rs.getString("tipo_cobranca"));
-					mprincipal.setQtdeitem(rs.getInt("qtdeitem"));
-					menu.add(mprincipal);
-					h_menu.put(rs.getInt("codigogrupo"), mprincipal);
-				}
-				Item item = new Item();
-				item.setCodigo(rs.getInt("codigoitem"));
-				item.setDescricao(rs.getString("descricaoitem"));
-				item.setDescricaoestab(rs.getString("descricaoestab"));
-				item.setGrupoadicionais(rs.getInt("grupo_adicionais_id"));
-				item.setPreco(rs.getDouble("preco"));
-				mprincipal.getItem().add(item);
-				ItemProvider.addItem(rs.getInt("codigoitem"), item);
-			}while(rs.next());
-		}
+	public static void atualiza(String jsonStr){
+        try{
+            JSONArray jsonArray = new JSONArray(jsonStr);
+            if(jsonArray.length() > 0){
+                menu = new ArrayList<MenuPrincipal>();
+                MenuPrincipal menuPrincipal = null;
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject j = jsonArray.getJSONObject(i);
+                    if(j.getString("class").equals("qmw.Menu")){
+                        JSONObject jMP = j.getJSONObject ("menuPrincipal");
+                        if(menuPrincipal == null || menuPrincipal.getId() != jMP.getInt("id"))
+                            menuPrincipal = MenuPrincipalProvider.getMPrincipalById(jMP.getInt("id"));
+                        Menu o = new Menu();
+                        o.setId(j.getInt("id"));
+                        o.setNome(Util.tostr(j.getString("nome")));
+                        o.setDescricao(Util.tostr(j.getString("descricao")));
+                        o.setPreco(j.getDouble("preco"));
+                        if(!j.getString("grupoAdicionais").equals("null"))
+                            o.setGrupoAdicionaisId(j.getJSONObject ("grupoAdicionais").getInt("id"));
+                        menuPrincipal.getMenu().add(o);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 	}
 
-	public static ArrayList<MPrincipal> getMenu() {
+	public static ArrayList<MenuPrincipal> getMenu() {
 		return menu;
 	}
 	
-	public static MPrincipal getMPrincipal(Integer codigo){
+	public static MenuPrincipal getMPrincipal(Integer codigo){
 		return h_menu.get(codigo);
 	}
 
 	public static void limpaMenu(){
-		menu = new ArrayList<MPrincipal>();
+		menu = new ArrayList<MenuPrincipal>();
 	}
 }

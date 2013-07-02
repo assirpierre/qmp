@@ -1,12 +1,12 @@
 package qmw
 
 import grails.converters.JSON
-
+import groovy.json.JsonSlurper
 
 class PedidoController {
 	def pedidoService
-
-	def beforeInterceptor = [action:this.&auth]
+    def autenticaService
+    def beforeInterceptor = {autenticaService.autenticaSessao(this)}
 
 	def listreimpressao(Integer max) {
 		params.max = Math.min(max ?: 9, 100)
@@ -103,18 +103,4 @@ class PedidoController {
 		pedidoService.excluir(params)
 		listpmesa()
 	}
-
-	def auth() {
-//		if(!session.estab) {
-//            redirect(controller:"Estabelecimento")
-//			return false
-//		}
-	}
-
-    def grava(){
-        println "Here is request.JSON: ${request.JSON as JSON}"
-        println "Here is params: $params"
-        //do awesome stuff with request.JSON only
-        render "ok maça até"
-    }
 }

@@ -1,8 +1,6 @@
 package com.qmenu.activity;
 
 
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -17,11 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qmenu.R;
-import com.qmenu.control.MenuProvider;
-import com.qmenu.util.AsyncTaskCompleteListener;
-import com.qmenu.util.DAO;
-import com.qmenu.util.Util;
-import com.qmenu.util.WS;
+import com.qmenu.util.*;
+import org.json.JSONObject;
 
 
 public class Login extends Activity implements AsyncTaskCompleteListener<String> {
@@ -77,31 +72,38 @@ public class Login extends Activity implements AsyncTaskCompleteListener<String>
 	}
 
 	private WS getWS(int transacao) {
-		WS ws = new WS("validalogin", this, this, transacao);
+		WS ws = new WS("login", this, this, transacao);
 		ws.addCampo("usuario", edLogin.getText().toString());
 	    ws.addCampo("senha", edSenha.getText().toString());
 	    return ws;
 	}
 
-    public void onTaskComplete(String metodo, int transacao, String retorno) {
+    public void onTaskComplete(String action, int transacao, String retorno) {
     	if(retorno.equals("-2"))
     		Util.semConexao(this, getWS(transacao));
-    	else if(retorno.equals("")){
+    	else if(retorno.indexOf("##ACESSONEGADO##")>-1){
 	    	Toast.makeText(Login.this, R.string.strUsuarioIncorreto, Toast.LENGTH_LONG).show();
 	    	edSenha.setText("");
 	    	edSenha.requestFocus();
+        }else if(retorno.equals("")){
+	    	Toast.makeText(Login.this, R.string.strErroDados, Toast.LENGTH_LONG).show();
 	    }else{
-	    	DAO rs = new DAO(retorno, this);
-	    	if(rs.next()){
-		    	Util.gravaSessao(Login.this, "usuario", edLogin.getText().toString().toLowerCase(Locale.getDefault()));
-		    	Util.gravaSessao(Login.this, "usuario_id", rs.getString("id"));
+            try{
+                JSONObject j = new JSONObject(retorno);
+		    	Util.gravaSessao(Login.this, "usuario", j.getString("codigo").toLowerCase());
+		    	Util.gravaSessao(Login.this, "usuario_id", j.getString("id"));
 				Util.gravaSessao(Login.this, "usuariopersistente", chGravarLogin.isChecked() + "");
 				Util.gravaSessao(Login.this, "logado", "true");
-				Util.gravaSessao(Login.this, "estab", rs.getString("estab_id"));
-	    	}
+                JSONObject e = j.getJSONObject ("estab");
+                if(e != null)
+    				Util.gravaSessao(Login.this, "estab", e.getString("id"));
+            }catch (Exception e){
+                Toast.makeText(Login.this, R.string.strErroDados, Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
 			Intent intent = new Intent();
 	        setResult(RESULT_OK, intent);
-	        finish();							    	
+	        finish();
 	    }
     }
 } 

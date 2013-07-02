@@ -7,7 +7,7 @@ class Usuario {
 	String email
 	static belongsTo = [estab: Estabelecimento]
 	static hasMany = [pedido: Pedido]
-	
+
 	String toString () {
 		"${codigo}"
 	}

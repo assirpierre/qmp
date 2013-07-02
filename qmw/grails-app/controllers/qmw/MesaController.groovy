@@ -1,10 +1,13 @@
 package qmw
 
+import grails.converters.JSON
+
 class MesaController {
 
-	def beforeInterceptor = [action:this.&auth]
+    def autenticaService
+    def beforeInterceptor = {autenticaService.autenticaSessao(this)}
+    def numeroService
     def scaffold=true
-	def formService
 
 	def list(Integer max) {
 		params.max = Math.min(max ?: 10, 100)
@@ -13,13 +16,6 @@ class MesaController {
 		 }
 		[mesaInstanceList: mesaInstance.list(params), mesaInstanceTotal: mesaInstance.count()]
 	}
-    
-    def auth() {
-        if(!session.estab) {
-            redirect(controller:"Estabelecimento")
-            return false
-        }
-    }
 	
 	def show(Long id) {
 		def mesaInstance = Mesa.get(id)
@@ -52,4 +48,10 @@ class MesaController {
 		flash.message = message(code: 'default.created.message', args: [message(code: 'mesa.label', default: 'Mesa'), mesaInstance.id])
 		redirect(action: "show", id: mesaInstance.id)
 	}
+
+    def exporta() {
+        def estab = numeroService.getInt(params['estab']);
+        render Mesa.where{estab.id == estab}.list() as JSON
+    }
+
 }

@@ -7,10 +7,10 @@ class PedidoCapa {
 	String nome
 	Date dataInicio
 	Date dataFim
-	double subTotal
-	double servico
-	double total
-	boolean cupomImpresso
+	double subTotal = 0
+	double servico = 0
+	double total = 0
+	boolean cupomImpresso = false
 	static belongsTo = [estab: Estabelecimento, mesa: Mesa]
 	
 	static constraints = {

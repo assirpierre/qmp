@@ -2,8 +2,9 @@ package qmw
 
 
 class UsuarioController {
-	def beforeInterceptor = [action:this.&auth]
-	def scaffold=true
+    def autenticaService
+    def beforeInterceptor = {autenticaService.autenticaSessao(this)}
+    def scaffold=true
 	
 	def list(Integer max) {
 		params.max = Math.min(max ?: 10, 100)		
@@ -32,12 +33,4 @@ class UsuarioController {
 		}
 		[usuarioInstance: usuarioInstance]
 	}
-		
-	def auth() {
-		if(!session.estab) {
-            redirect(controller:"Estabelecimento")
-			return false
-		}
-	}
-	
 }

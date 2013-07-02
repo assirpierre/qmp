@@ -2,6 +2,7 @@ package com.qmenu.activity;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -20,7 +21,7 @@ import android.widget.TextView;
 
 import com.qmenu.R;
 import com.qmenu.control.PedidoProvider;
-import com.qmenu.model.Item;
+import com.qmenu.model.Menu;
 import com.qmenu.model.Pedido;
 import com.qmenu.util.Data;
 import com.qmenu.util.Util;
@@ -44,7 +45,7 @@ public class EfetuaPedidoMItem extends ListActivity
 		Util.carregaTitulo(this);
 		pedido = PedidoProvider.getPedidoAtual();
 		TextView txDescricao = (TextView) findViewById(R.id.txDescricao);
-		txDescricao.setText(pedido.getMprincipal().getDescricao());
+		txDescricao.setText(pedido.getMprincipal().getNome());
 		txTotal = (TextView) findViewById(R.id.txTotal);
 		upButton = (Button) findViewById(R.id.upButton);
 		downButton = (Button) findViewById(R.id.downButton);
@@ -73,7 +74,7 @@ public class EfetuaPedidoMItem extends ListActivity
 			}
 		});
 		Button btAdicionais = (Button) findViewById(R.id.btAdicionais);
-		if(pedido.getItemSelecionado().getGrupoadicionais() == 0)
+        if(pedido.getItemSelecionado().getGrupoAdicionaisId() != null)
 			btAdicionais.setVisibility(View.GONE);
 		btAdicionais.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {		
@@ -84,7 +85,7 @@ public class EfetuaPedidoMItem extends ListActivity
         btPedido.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {  
         		pedido.setObservacao(edObs.getText().toString());
-				pedido.setDatapedido(Data.getDataHoraAtual());
+				pedido.setDatapedido(new Date());
 				PedidoProvider.gravaPedidoPendente();
 				if(PedidoProvider.isNovo()){
 					Intent i = new Intent(EfetuaPedidoMItem.this, MenuPrincipal.class);
@@ -103,7 +104,7 @@ public class EfetuaPedidoMItem extends ListActivity
         	edObs.setEnabled(false);
             btAdicionais.setEnabled(false);
         }
-		this.m_adapter = new MenuItemAdapter(this, R.layout.rowitem, pedido.getL_item());
+		this.m_adapter = new MenuItemAdapter(this, R.layout.rowitem, pedido.getL_menu());
 		setListAdapter(this.m_adapter);
 	}
 	
@@ -117,9 +118,9 @@ public class EfetuaPedidoMItem extends ListActivity
 		startActivityForResult(new Intent(this, EfetuaPedido.class), 0);
 	}
 	
-	private class MenuItemAdapter extends ArrayAdapter<Item> {
-		private ArrayList<Item> item;
-		public MenuItemAdapter(Context context, int textViewResourceId,  ArrayList<Item> item) {
+	private class MenuItemAdapter extends ArrayAdapter<Menu> {
+		private ArrayList<Menu> item;
+		public MenuItemAdapter(Context context, int textViewResourceId,  ArrayList<Menu> item) {
 			super(context, textViewResourceId, item);
 			this.item = item;
 		}
@@ -130,16 +131,16 @@ public class EfetuaPedidoMItem extends ListActivity
 				v = vi.inflate(R.layout.rowitem, null);
 			}
 			Util.formataRow(position, v);
-			Item o = item.get(position);
+			Menu o = item.get(position);
 			if (o != null) {
-				TextView txDescricao = (TextView) v.findViewById(R.id.descricao);
+				TextView txNome = (TextView) v.findViewById(R.id.nome);
 				TextView txPreco = (TextView) v.findViewById(R.id.preco);
-				TextView txDescricaoEstab = (TextView) v.findViewById(R.id.descricaoestab);
+				TextView txDescricao = (TextView) v.findViewById(R.id.descricao);
 				CheckBox chItem = (CheckBox)v.findViewById(R.id.chItem);
 				chItem.setVisibility(View.GONE);
-				txDescricao.setText(o.getDescricao());
+				txNome.setText(o.getNome());
 				txPreco.setVisibility(View.GONE);
-				txDescricaoEstab.setText(o.getDescricaoestab());
+				txDescricao.setText(o.getDescricao());
 			}
 			return v;
 		}
