@@ -32,9 +32,10 @@ public class PedidoProvider {
 	private static ArrayList<Pedido> pedidoPendente = new ArrayList<Pedido>();
 	private static double total;
 	
-	public static void atualiza(String jsonStr, Activity a){
+	public static void atualiza(String jsonStr){
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            Log.e("qmenu", "aaa" + jsonStr);
             JSONArray jsonArray = new JSONArray(jsonStr);
             if(jsonArray.length() > 0){
                 total = 0;
@@ -48,7 +49,7 @@ public class PedidoProvider {
                         o.setObservacao(Util.tostr(j.getString("observacao")));
                         o.setSituacao(j.getString("situacao"));
                         o.setUsuario(j.getString("usuarioCodigo"));
-                        o.setMprincipal(MenuProvider.getMPrincipal(j.getJSONObject ("menuPrincipal").getInt("id")));
+                        o.setMprincipal(MenuPrincipalProvider.getMPrincipalById(j.getJSONObject ("menuPrincipal").getInt("id")));
                         o.setQtde(j.getInt("qtde"));
                         o.setPrecoadicionais(j.getDouble("precoAdicionais"));
                         o.setTotal(j.getDouble("total"));

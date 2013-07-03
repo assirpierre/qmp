@@ -1,6 +1,7 @@
 package com.qmenu.control;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import com.qmenu.model.Adicionais;
 import com.qmenu.util.Util;
 import org.json.JSONArray;
@@ -25,16 +26,17 @@ public class AdicionaisProvider {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject j = jsonArray.getJSONObject(i);
                     if(j.getString("class").equals("qmw.Adicionais")){
-                        if(grupo != 0 && grupo != j.getInt("id")){
-                            l_grupoAdicionais.put(grupo, adicionais_g);
+                        if(grupo != j.getJSONObject ("grupoAdicionais").getInt("id")){
+                            if(grupo != 0)
+                                l_grupoAdicionais.put(grupo, adicionais_g);
                             adicionais_g = new ArrayList<Adicionais>();
-                            grupo = j.getInt("id");
+                            grupo = j.getJSONObject ("grupoAdicionais").getInt("id");
                         }
                         Adicionais o = new Adicionais();
                         o.setId(j.getInt("id"));
                         o.setNome(Util.tostr(j.getString("nome")));
                         o.setDescricao(Util.tostr(j.getString("descricao")));
-                        o.setGrupoAdicionaisId(j.getInt("grupoAdicionaisId"));
+                        o.setGrupoAdicionaisId(j.getJSONObject ("grupoAdicionais").getInt("id"));
                         o.setPreco(j.getDouble("preco"));
                         adicionais.add(o);
                         adicionais_g.add(o);

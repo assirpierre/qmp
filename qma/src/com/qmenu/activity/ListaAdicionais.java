@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,8 @@ public class ListaAdicionais extends ListActivity
 		setContentView(R.layout.listaadicionais);
 		Util.carregaTitulo(this);
 		pedido = PedidoProvider.getPedidoAtual();
-        l_adicionais = AdicionaisProvider.getAdicionais(pedido.getItemSelecionado().getGrupoAdicionaisId());
+        Log.e("qmenu", pedido.getMenuSelecionado().getNome() + "ss" + pedido.getMenuSelecionado().getGrupoAdicionaisId());
+        l_adicionais = AdicionaisProvider.getAdicionais(pedido.getMenuSelecionado().getGrupoAdicionaisId());
         Button btOK = (Button) findViewById(R.id.btOK);
         btOK.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {
@@ -89,8 +91,8 @@ public class ListaAdicionais extends ListActivity
 				chItem.setTag(o);
 				chItem.setOnClickListener( new View.OnClickListener() {  
 					public void onClick(View v) {  
-						CheckBox cb = (CheckBox) v ;  
-						Menu o = (Menu) cb.getTag();
+						CheckBox cb = (CheckBox) v ;
+                        Adicionais o = (Adicionais) cb.getTag();
 						o.setSelecionado(cb.isChecked());
 					}  
 				});  

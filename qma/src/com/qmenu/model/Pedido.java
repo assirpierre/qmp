@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.content.Context;
+import android.util.Log;
 import com.qmenu.util.Numero;
 import com.qmenu.util.Util;
 import org.json.JSONException;
@@ -106,8 +107,8 @@ public class Pedido {
 		return l_adicionais.size();
 	}
 	
-	public Menu getItemSelecionado(){
-		return l_menu.get(posItemSelecionado);
+	public Menu getMenuSelecionado(){
+        return l_menu.get(posItemSelecionado);
 	}
 	
 	public String getDescricaoItens(){
@@ -239,8 +240,8 @@ public class Pedido {
             obj.put("usuarioCodigo", usuario);
             obj.put("situacao", "C");
             obj.put("qtde", qtde);
-            obj.put("precounitario", precounitario);
-            obj.put("precoadicionais", precoadicionais);
+            obj.put("preco", precounitario);
+            obj.put("precoAdicionais", precoadicionais);
             obj.put("total", total);
         } catch (JSONException e) {
             e.printStackTrace();

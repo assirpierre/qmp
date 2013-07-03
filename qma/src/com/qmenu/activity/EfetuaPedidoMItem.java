@@ -23,7 +23,6 @@ import com.qmenu.R;
 import com.qmenu.control.PedidoProvider;
 import com.qmenu.model.Menu;
 import com.qmenu.model.Pedido;
-import com.qmenu.util.Data;
 import com.qmenu.util.Util;
 
 public class EfetuaPedidoMItem extends ListActivity 
@@ -74,7 +73,7 @@ public class EfetuaPedidoMItem extends ListActivity
 			}
 		});
 		Button btAdicionais = (Button) findViewById(R.id.btAdicionais);
-        if(pedido.getItemSelecionado().getGrupoAdicionaisId() != null)
+        if(pedido.getMenuSelecionado().getGrupoAdicionaisId() == null)
 			btAdicionais.setVisibility(View.GONE);
 		btAdicionais.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {		

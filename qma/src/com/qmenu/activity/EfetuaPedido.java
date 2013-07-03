@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.qmenu.R;
 import com.qmenu.control.PedidoProvider;
 import com.qmenu.model.Pedido;
-import com.qmenu.util.Data;
 import com.qmenu.util.ImageLoader;
 import com.qmenu.util.Util;
 
@@ -44,7 +43,7 @@ public class EfetuaPedido extends Activity
 		TextView txDescricao = (TextView) findViewById(R.id.txDescricao);
 		txDescricao.setText(pedido.getItemdescricao());
 		TextView txPrecoUnitario = (TextView) findViewById(R.id.txPrecoUnitario);
-		txPrecoUnitario.setText(getString(R.string.strPrecoUnitarioPedido) + " " + pedido.getItemSelecionado().getPrecoF());
+		txPrecoUnitario.setText(getString(R.string.strPrecoUnitarioPedido) + " " + pedido.getMenuSelecionado().getPrecoF());
 		txTotal = (TextView) findViewById(R.id.txTotal);		
 		upButton = (Button) findViewById(R.id.upButton);
 		downButton = (Button) findViewById(R.id.downButton);
@@ -73,7 +72,7 @@ public class EfetuaPedido extends Activity
 			}
 		});
 		Button btAdicionais = (Button) findViewById(R.id.btAdicionais);
-		if(pedido.getItemSelecionado().getGrupoAdicionaisId() != null)
+		if(pedido.getMenuSelecionado().getGrupoAdicionaisId() == null)
 			btAdicionais.setVisibility(View.GONE);
 		btAdicionais.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {		
@@ -108,7 +107,7 @@ public class EfetuaPedido extends Activity
             btAdicionais.setEnabled(false);
         }
         imgView = (ImageView)findViewById(R.id.imgItem);
-        ImageLoader.getInstance().load(imgView, "http://www.qmenu.com.br:8080/upload/qmenu/" + Util.leSessao(EfetuaPedido.this, "estab") + "/" + pedido.getItemSelecionado().getId() + ".jpg", false);
+        ImageLoader.getInstance().load(imgView, "http://www.qmenu.com.br:8080/upload/qmenu/" + Util.leSessao(EfetuaPedido.this, "estab") + "/" + pedido.getMenuSelecionado().getId() + ".jpg", false);
 	}
 
 	public void onConfigurationChanged(Configuration newConfig) {  

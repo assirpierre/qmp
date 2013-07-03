@@ -23,6 +23,7 @@ class TrocadadosController {
         }
         render Dispositivo.where {id == d.id}.list() +
                Estabelecimento.where{id == estabId}.list() +
+               Adicionais.where{estab.id == estabId}.list(sort:'grupoAdicionais') +
                Mesa.where{estab.id == estabId}.list() +
                MenuPrincipal.where{estab.id == estabId}.list() +
                Menu.where{estab.id == estabId}.list(sort:'menuPrincipal') as JSON
@@ -97,7 +98,9 @@ class TrocadadosController {
     def listaultimopedido(){
         def mesaId = numeroService.getInt(params['mesa']);
         Mesa m = Mesa.get(mesaId)
-        render p.where{sequencia == getUltSequencia(m)}.list() as JSON
+        render Pedido.where{sequencia == getUltSequencia(m)
+                            and
+                            pedidoCapa.id == m.pedidoCapa.id}.list() as JSON
     }
 
     def listatodospedidos(){

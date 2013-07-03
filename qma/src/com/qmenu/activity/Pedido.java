@@ -195,7 +195,7 @@ public class Pedido extends ListActivity implements AsyncTaskCompleteListener<St
 					startActivityForResult(i, 0);
     			}
     		}else{
-    			PedidoProvider.atualiza(retorno, this);
+    			PedidoProvider.atualiza(retorno);
     			m_adapter = new MenuItemAdapter(this, R.layout.rowlistapedido, PedidoProvider.getPedido());
     			setListAdapter(m_adapter);		
     			atualizaTotal();

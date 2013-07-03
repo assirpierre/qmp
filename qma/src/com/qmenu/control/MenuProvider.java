@@ -1,6 +1,7 @@
 package com.qmenu.control;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import com.qmenu.model.Menu;
 import com.qmenu.model.MenuPrincipal;
 import com.qmenu.util.Util;
@@ -12,15 +13,16 @@ import java.util.HashMap;
 
 public class MenuProvider {
 	
-	private static ArrayList<MenuPrincipal> menu = new ArrayList<MenuPrincipal>();
+	private static ArrayList<Menu> menu = new ArrayList<Menu>();
 	@SuppressLint("UseSparseArrays")
-	private static HashMap<Integer, MenuPrincipal> h_menu = new HashMap<Integer, MenuPrincipal>();
+	private static HashMap<Integer, Menu> h_menu = new HashMap<Integer, Menu>();
 	
 	public static void atualiza(String jsonStr){
         try{
             JSONArray jsonArray = new JSONArray(jsonStr);
             if(jsonArray.length() > 0){
-                menu = new ArrayList<MenuPrincipal>();
+                menu = new ArrayList<Menu>();
+                h_menu = new HashMap<Integer, Menu>();
                 MenuPrincipal menuPrincipal = null;
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject j = jsonArray.getJSONObject(i);
@@ -33,9 +35,12 @@ public class MenuProvider {
                         o.setNome(Util.tostr(j.getString("nome")));
                         o.setDescricao(Util.tostr(j.getString("descricao")));
                         o.setPreco(j.getDouble("preco"));
-                        if(!j.getString("grupoAdicionais").equals("null"))
+                        if(!j.getString("grupoAdicionais").equals("null")){
                             o.setGrupoAdicionaisId(j.getJSONObject ("grupoAdicionais").getInt("id"));
+                        }
                         menuPrincipal.getMenu().add(o);
+                        menu.add(o);
+                        h_menu.put(j.getInt("id"), o);
                     }
                 }
             }
@@ -44,15 +49,15 @@ public class MenuProvider {
         }
 	}
 
-	public static ArrayList<MenuPrincipal> getMenu() {
+	public static ArrayList<Menu> getMenu() {
 		return menu;
 	}
 	
-	public static MenuPrincipal getMPrincipal(Integer codigo){
-		return h_menu.get(codigo);
+	public static Menu getMenuById(Integer id){
+		return h_menu.get(id);
 	}
 
 	public static void limpaMenu(){
-		menu = new ArrayList<MenuPrincipal>();
+		menu = new ArrayList<Menu>();
 	}
 }
