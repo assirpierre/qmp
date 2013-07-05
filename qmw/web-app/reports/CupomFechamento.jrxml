@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pedidoIndividual" language="groovy" pageWidth="212" pageHeight="216" columnWidth="208" leftMargin="2" rightMargin="2" topMargin="0" bottomMargin="2" isIgnorePagination="true" uuid="fe926af7-f480-4d8c-bd12-3210d8bf74d9">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="192"/>
 	<parameter name="IMAGE_DIR" class="java.lang.String"/>
 	<parameter name="mesa.label" class="java.lang.String"/>
 	<parameter name="qtde.label" class="java.lang.String"/>
@@ -56,14 +56,14 @@
 				<textFieldExpression><![CDATA[$P{cabecCupom}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="d0a77333-12e4-4b99-a242-35a60c3e78f1" x="118" y="98" width="25" height="10"/>
+				<reportElement uuid="d0a77333-12e4-4b99-a242-35a60c3e78f1" x="123" y="95" width="20" height="13"/>
 				<textElement textAlignment="Right" markup="none">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{preco.label}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="b60f90d3-0891-4528-a6b5-44bee52edcfa" x="179" y="98" width="25" height="10"/>
+				<reportElement uuid="b60f90d3-0891-4528-a6b5-44bee52edcfa" x="179" y="95" width="25" height="13"/>
 				<textElement textAlignment="Right" markup="none">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -88,7 +88,7 @@
 				<imageExpression><![CDATA[$P{IMAGE_DIR} + "qmenublack.png"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement uuid="7cc03f8b-f7e5-472d-b9c2-d1c4ce2fa1f9" x="144" y="98" width="24" height="10"/>
+				<reportElement uuid="7cc03f8b-f7e5-472d-b9c2-d1c4ce2fa1f9" x="144" y="95" width="24" height="13"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
@@ -172,42 +172,42 @@ $F{item} + ($F{itemAdicional}==null?"":"\n    AD:" + $F{itemAdicional})]]></text
 	<pageFooter>
 		<band height="81">
 			<textField pattern="###0.00">
-				<reportElement uuid="11f3734f-dc87-4cc7-8a65-11e6d2a1ac55" x="133" y="20" width="71" height="10"/>
+				<reportElement uuid="11f3734f-dc87-4cc7-8a65-11e6d2a1ac55" x="133" y="20" width="71" height="11"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pedidoCapa.total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
-				<reportElement uuid="174f7b9d-e372-4365-b19a-3f44d972d77e" x="133" y="0" width="71" height="10"/>
+				<reportElement uuid="174f7b9d-e372-4365-b19a-3f44d972d77e" x="133" y="0" width="71" height="11"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pedidoCapa.subTotal}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="83748d35-53a3-4744-8c59-12c3422dd16f" x="2" y="0" width="59" height="10"/>
+				<reportElement uuid="83748d35-53a3-4744-8c59-12c3422dd16f" x="2" y="0" width="59" height="11"/>
 				<textElement markup="none">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{subTotal.label}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
-				<reportElement uuid="739b9798-cc55-4fee-9096-dc61ad16bf6d" x="133" y="10" width="71" height="10"/>
+				<reportElement uuid="739b9798-cc55-4fee-9096-dc61ad16bf6d" x="133" y="10" width="71" height="11"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pedidoCapa.servico}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="3a8c3326-bb5d-49b4-af6f-c9e3096c5169" x="2" y="20" width="59" height="10"/>
+				<reportElement uuid="3a8c3326-bb5d-49b4-af6f-c9e3096c5169" x="2" y="20" width="59" height="11"/>
 				<textElement markup="none">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{total.label}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="3c612251-2457-4c58-81c9-cc8e5e57012a" x="2" y="10" width="59" height="10"/>
+				<reportElement uuid="3c612251-2457-4c58-81c9-cc8e5e57012a" x="2" y="10" width="59" height="11"/>
 				<textElement markup="none">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -220,7 +220,7 @@ $F{item} + ($F{itemAdicional}==null?"":"\n    AD:" + $F{itemAdicional})]]></text
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement uuid="9cc1a557-9396-49e1-97d6-89b8e3359a8f" x="2" y="70" width="202" height="10"/>
+				<reportElement uuid="9cc1a557-9396-49e1-97d6-89b8e3359a8f" x="2" y="70" width="202" height="11"/>
 				<textElement textAlignment="Center" markup="none">
 					<font size="8"/>
 				</textElement>
