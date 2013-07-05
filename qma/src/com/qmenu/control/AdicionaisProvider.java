@@ -1,7 +1,6 @@
 package com.qmenu.control;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import com.qmenu.model.Adicionais;
 import com.qmenu.util.Util;
 import org.json.JSONArray;
@@ -12,7 +11,8 @@ import java.util.HashMap;
 
 @SuppressLint("UseSparseArrays")
 public class AdicionaisProvider {
-    private static HashMap<Integer, ArrayList> l_grupoAdicionais = new HashMap<Integer, ArrayList>();
+    private static HashMap<Integer, ArrayList> h_grupoAdicionais = new HashMap<Integer, ArrayList>();
+    private static HashMap<Integer, Adicionais> h_adicionais = new HashMap<Integer, Adicionais>();
     private static ArrayList<Adicionais> adicionais = new ArrayList<Adicionais>();
 
 	public static void atualiza(String jsonStr){
@@ -20,7 +20,7 @@ public class AdicionaisProvider {
             JSONArray jsonArray = new JSONArray(jsonStr);
             if(jsonArray.length() > 0){
                 int grupo = 0;
-                l_grupoAdicionais = new HashMap<Integer, ArrayList>();
+                h_grupoAdicionais = new HashMap<Integer, ArrayList>();
                 ArrayList<Adicionais> adicionais_g = new ArrayList<Adicionais>();
 
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -28,7 +28,7 @@ public class AdicionaisProvider {
                     if(j.getString("class").equals("qmw.Adicionais")){
                         if(grupo != j.getJSONObject ("grupoAdicionais").getInt("id")){
                             if(grupo != 0)
-                                l_grupoAdicionais.put(grupo, adicionais_g);
+                                h_grupoAdicionais.put(grupo, adicionais_g);
                             adicionais_g = new ArrayList<Adicionais>();
                             grupo = j.getJSONObject ("grupoAdicionais").getInt("id");
                         }
@@ -39,10 +39,11 @@ public class AdicionaisProvider {
                         o.setGrupoAdicionaisId(j.getJSONObject ("grupoAdicionais").getInt("id"));
                         o.setPreco(j.getDouble("preco"));
                         adicionais.add(o);
+                        h_adicionais.put(j.getInt("id"), o);
                         adicionais_g.add(o);
                     }
                 }
-                l_grupoAdicionais.put(grupo, adicionais_g);
+                h_grupoAdicionais.put(grupo, adicionais_g);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -50,6 +51,10 @@ public class AdicionaisProvider {
 	}
 
     public static ArrayList<Adicionais> getAdicionais(Integer grupoAdicionalId) {
-        return l_grupoAdicionais.get(grupoAdicionalId);
+        return h_grupoAdicionais.get(grupoAdicionalId);
+    }
+
+    public static Adicionais getAdicionaisById(int id){
+        return h_adicionais.get(id);
     }
 }

@@ -53,7 +53,7 @@ public class MenuProvider {
 		return menu;
 	}
 	
-	public static Menu getMenuById(Integer id){
+	public static Menu getMenuById(int id){
 		return h_menu.get(id);
 	}
 

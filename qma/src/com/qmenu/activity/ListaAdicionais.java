@@ -36,7 +36,6 @@ public class ListaAdicionais extends ListActivity
 		setContentView(R.layout.listaadicionais);
 		Util.carregaTitulo(this);
 		pedido = PedidoProvider.getPedidoAtual();
-        Log.e("qmenu", pedido.getMenuSelecionado().getNome() + "ss" + pedido.getMenuSelecionado().getGrupoAdicionaisId());
         l_adicionais = AdicionaisProvider.getAdicionais(pedido.getMenuSelecionado().getGrupoAdicionaisId());
         Button btOK = (Button) findViewById(R.id.btOK);
         btOK.setOnClickListener(new View.OnClickListener() {

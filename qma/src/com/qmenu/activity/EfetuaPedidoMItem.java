@@ -73,7 +73,7 @@ public class EfetuaPedidoMItem extends ListActivity
 			}
 		});
 		Button btAdicionais = (Button) findViewById(R.id.btAdicionais);
-        if(pedido.getMenuSelecionado().getGrupoAdicionaisId() == null)
+        if(pedido.getL_menu().get(0).getGrupoAdicionaisId() == null)
 			btAdicionais.setVisibility(View.GONE);
 		btAdicionais.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {		
@@ -101,7 +101,6 @@ public class EfetuaPedidoMItem extends ListActivity
         	downButton.setEnabled(false);
         	upButton.setEnabled(false);
         	edObs.setEnabled(false);
-            btAdicionais.setEnabled(false);
         }
 		this.m_adapter = new MenuItemAdapter(this, R.layout.rowitem, pedido.getL_menu());
 		setListAdapter(this.m_adapter);

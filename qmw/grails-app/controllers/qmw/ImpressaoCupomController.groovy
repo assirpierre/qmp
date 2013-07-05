@@ -19,10 +19,12 @@ class ImpressaoCupomController {
         def local = params['local']
 		def pedidoInstance = Pedido.where {
 			pedidoCapa.id == cumpomID
-			and
-			sequencia == sequencia
             and
-            menuPrincipal.localAtendimento == local
+            sequencia == sequencia
+            if(local){
+                and
+                menuPrincipal.localAtendimento == local
+            }
 		}
 		HashMap<String,String> parameters = new HashMap<String,String>()
 		parameters.put("IMAGE_DIR","${servletContext.getRealPath('/images')}/")
@@ -61,7 +63,7 @@ class ImpressaoCupomController {
 		parameters.put("rodapeCupom",message(code: 'pedido.rodapeCupom'))
 		NumberFormat formatter = NumberFormat.getCurrencyInstance()
         DateFormat fDate = new SimpleDateFormat('E, dd MMM yyyy HH:mm')
-		PedidoCapa u = pedidoInstance.first().pedidoCapa
+		PedidoCapa u = PedidoCapa.get(cumpomID)
 		parameters.put("data",fDate.format(u.dataFim).toString())
 		TimeDuration td = TimeCategory.minus( u.dataFim, u.dataInicio )
 		parameters.put("tempoPermanencia",td.getHours() + ":" + String.format('%02d',td.getMinutes()))

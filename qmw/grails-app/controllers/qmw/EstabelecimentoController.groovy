@@ -64,7 +64,10 @@ class EstabelecimentoController {
                 estabelecimentoService.criarModelo (estabelecimentoInstance)
             estabelecimentoService.enviaEmailNovoEstab(estabelecimentoInstance, message(code: 'contato.email.destino'))
         }
-        flash.message = message(code: 'default.created.message', args: [message(code: 'estabelecimento.label', default: 'Estabelecimento'), estabelecimentoInstance.id])
+        if(params['geraCadastro'])
+            flash.message = message(code: 'estabelecimento.created.message', args: [message(code: Usuario.findByEstab(estabelecimentoInstance).codigo), estabelecimentoInstance.id])
+        else
+            flash.message = message(code: 'default.created.message', args: [message(code: 'estabelecimento.label', default: 'Estabelecimento'), estabelecimentoInstance.id])
         redirect(action: "show", id: estabelecimentoInstance.id)
     }
 

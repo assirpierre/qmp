@@ -43,7 +43,7 @@ public class Menu extends ListActivity
                 com.qmenu.model.Pedido pedido = new com.qmenu.model.Pedido();
         		for(com.qmenu.model.Menu o:mprincipal.getMenu())
         			if(o.isSelecionado())
-        				pedido.addItem(o);
+        				pedido.addItem(o, mprincipal);
         		if(pedido.getQtdeItem() != mprincipal.getQtdeItem())
         			Util.alert(Menu.this, getString(R.string.strQtdeItemSelIncorreto).replaceAll("##S", "" + pedido.getQtdeItem()).replaceAll("##E", "" + mprincipal.getQtdeItem()));
         		else
@@ -68,7 +68,7 @@ public class Menu extends ListActivity
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         com.qmenu.model.Pedido pedido = new com.qmenu.model.Pedido();
-        pedido.addItem((com.qmenu.model.Menu)this.getListAdapter().getItem(position));
+        pedido.addItem((com.qmenu.model.Menu)this.getListAdapter().getItem(position), mprincipal);
 		abrePedido(pedido);
     }
 

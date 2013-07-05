@@ -31,9 +31,8 @@
 	<field name="sequencia" class="java.lang.String"/>
 	<field name="usuario.codigo" class="java.lang.String"/>
 	<field name="observacao" class="java.lang.String"/>
-	<field name="item" class="java.lang.String"/>
+	<field name="itemCompleto" class="java.lang.String"/>
 	<field name="qtde" class="java.lang.Double"/>
-	<field name="itemDescricao" class="java.lang.String"/>
 	<field name="itemAdicional" class="java.lang.String"/>
 	<field name="itemAdicionalDescricao" class="java.lang.String"/>
 	<background>
@@ -109,11 +108,10 @@
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{item} +
-($F{itemDescricao}.equals("")?"":" (" + $F{itemDescricao} + ")") +
-($F{itemAdicional}.equals("")?"":"\n   AD:" + $F{itemAdicional}) +
-($F{itemAdicionalDescricao}.equals("")?"":"(" + $F{itemAdicionalDescricao} + ")") +
-($F{observacao}.equals("")?"":"\n   OBS:" + $F{observacao})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{itemCompleto} +
+($F{itemAdicional}==null?"":"\n   AD:" + $F{itemAdicional}) +
+($F{itemAdicionalDescricao}==null?"":"(" + $F{itemAdicionalDescricao} + ")") +
+($F{observacao}==null?"":"\n   OBS:" + $F{observacao})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -2,11 +2,13 @@ package qmw
 
 import grails.converters.JSON
 import groovy.json.JsonSlurper
+import org.codehaus.groovy.grails.web.json.JSONArray
 import org.hibernate.SessionFactory
 
-class TrocadadosController {
-    def autenticaService
+class InterfaceController {
+
     def numeroService
+    def autenticaService
     def beforeInterceptor = {autenticaService.autenticaChave(this)}
     def SessionFactory sessionFactory
 
@@ -22,11 +24,11 @@ class TrocadadosController {
             println "log: " + params['log']
         }
         render Dispositivo.where {id == d.id}.list() +
-               Estabelecimento.where{id == estabId}.list() +
-               Adicionais.where{estab.id == estabId}.list(sort:'grupoAdicionais') +
-               Mesa.where{estab.id == estabId}.list() +
-               MenuPrincipal.where{estab.id == estabId}.list() +
-               Menu.where{estab.id == estabId}.list(sort:'menuPrincipal') as JSON
+                Estabelecimento.where{id == estabId}.list() +
+                Adicionais.where{estab.id == estabId}.list(sort:'grupoAdicionais') +
+                Mesa.where{estab.id == estabId}.list() +
+                MenuPrincipal.where{estab.id == estabId}.list() +
+                Menu.where{estab.id == estabId}.list(sort:'menuPrincipal') as JSON
     }
 
     def login() {
@@ -46,7 +48,7 @@ class TrocadadosController {
             render Mesa.where{estab.id == estabId}.list() as JSON
         else{
             PedidoCapa p = new PedidoCapa(estab:Estabelecimento.get(estabId),mesa:m,nome:nome, dataInicio: new Date())
-            p.save()
+            p.save(flush: true)
             m.pedidoCapa = p
             m.nome = nome
             m.dataultsituacao = new Date()
@@ -82,7 +84,7 @@ class TrocadadosController {
                 pc.setServico(servico)
                 pc.setTotal(servico + subTotal)
                 pc.dataFim = new Date()
-                pc.save()
+                pc.save(flush: true)
                 m.pedidoCapa = null
                 m.nome = null
                 m.dataultsituacao = new Date()
@@ -98,15 +100,24 @@ class TrocadadosController {
     def listaultimopedido(){
         def mesaId = numeroService.getInt(params['mesa']);
         Mesa m = Mesa.get(mesaId)
-        render Pedido.where{sequencia == getUltSequencia(m)
-                            and
-                            pedidoCapa.id == m.pedidoCapa.id}.list() as JSON
+        def ultSequencia = getUltSequencia(m);
+        render Pedido.where{sequencia == ultSequencia
+            and
+            pedidoCapa.id == m.pedidoCapa.id}.list() +
+                PedidoAdicionais.where{pedido.sequencia == ultSequencia
+                    and
+                    pedido.pedidoCapa.id == m.pedidoCapa.id}.list() +
+                PedidoItem.where{pedido.sequencia == ultSequencia
+                    and
+                    pedido.pedidoCapa.id == m.pedidoCapa.id}.list() as JSON
     }
 
     def listatodospedidos(){
         def mesaId = numeroService.getInt(params['mesa']);
         Mesa m = Mesa.get(mesaId)
-        render Pedido.where{pedidoCapa.id == m.pedidoCapa.id}.list() as JSON
+        render Pedido.where{pedidoCapa.id == m.pedidoCapa.id}.list() +
+                PedidoAdicionais.where{pedido.pedidoCapa.id == m.pedidoCapa.id}.list() +
+                PedidoItem.where{pedido.pedidoCapa.id == m.pedidoCapa.id}.list() as JSON
     }
 
 
@@ -114,10 +125,6 @@ class TrocadadosController {
         assert sessionFactory != null
         def json = (request.JSON as JSON).toString()
         def list = new JsonSlurper().parseText(json)
-// Print them out to make sure
-//        list.each { println it.getAt("adicionais")
-//            new Mesa (it).save(flush: true)
-//        }
         def m, sequencia = null, retorno = null, estabId = null, dispositivo = null, transacao = null, transacaoOK = false
         if(!LogTransacao.findByDispositivoAndTransacao(params['dispositivo'], params['transacao'])){
             list.each {
@@ -129,10 +136,29 @@ class TrocadadosController {
                 it.sequencia = sequencia
                 it.dataPedido = Date.parse("yyyy-MM-dd'T'HH:mm:ss'Z'", it.getAt("dataPedido"))
                 it.pedidoCapa = m.pedidoCapa
-                if(!new Pedido(it).save(flush:true))
-                   retorno = "##ERRO##"
+                Pedido p = new Pedido(it);
+                if(!p.save(flush:true))
+                    retorno = "##ERRO##"
+                else{
+                    JSONArray add = new JSONArray(it.getAt("add"));
+                    add.each {
+//                        p.addToPedidoAdicionais(new JSONArray(it.getAt("add"))
+                        it.pedido = p;
+                        if(!new PedidoAdicionais(it).save(flush: true))
+                            retorno = "##ERRO##"
+                    }
+                    JSONArray itens = new JSONArray(it.getAt("itens"));
+                    itens.each {
+                        it.pedido = p;
+                        if(!new PedidoItem(it).save(flush: true))
+                            retorno = "##ERRO##"
+                    }
 
+                }
             }
+            if(m)
+                calculaTotalPedido(m.pedidoCapa)
+
         }
         if(retorno == null){
             new LogTransacao(dispositivo: params['dispositivo'], transacao: params['transacao']).save(flush: true)
@@ -141,6 +167,24 @@ class TrocadadosController {
             render retorno
         }
 
+    }
+
+    def calculaTotalPedido (pc){
+        def p = Pedido.where{pedidoCapa.id == pc.id}
+        if(p){
+            def subTotal = p.get{
+                projections {
+                    sum('total')
+                }
+            }
+            if(subTotal==null)
+                subTotal = 0
+            def servico = subTotal*pc.estab.taxaServico/100
+            pc.subTotal = subTotal
+            pc.setServico(servico)
+            pc.setTotal(servico + subTotal)
+            pc.save(flush: true)
+        }
     }
 
     def getUltSequencia(m){

@@ -9,8 +9,10 @@ class Pedido {
 	double qtde
 	double precoAdicionais
 	double total
+    int qtdeItem
 	String observacao
 	String situacao
+    String itemCompleto
     String item
     String itemDescricao
     String itemAdicional
@@ -18,6 +20,7 @@ class Pedido {
     String usuarioCodigo
 	boolean cupomImpresso
 	static belongsTo = [estab: Estabelecimento, usuario: Usuario, mesa: Mesa, menuPrincipal: MenuPrincipal, pedidoCapa: PedidoCapa]
+    static hasMany = [pedidoAdicionais:PedidoAdicionais, pedidoItem:PedidoItem]
 
 	static constraints = {
 		observacao(nullable: true)

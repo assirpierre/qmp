@@ -1,15 +1,15 @@
 package com.qmenu.model;
 
+import android.content.Context;
+import com.qmenu.util.Numero;
+import com.qmenu.util.Util;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import android.content.Context;
-import android.util.Log;
-import com.qmenu.util.Numero;
-import com.qmenu.util.Util;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class Pedido {
@@ -32,6 +32,15 @@ public class Pedido {
 	private double precoadicionais = 0;
 	private double total;
 	private int posItemSelecionado;
+    private String itemCompleto = "";
+
+    public String getItemCompleto() {
+        return itemCompleto;
+    }
+
+    public void setItemCompleto(String itemCompleto) {
+        this.itemCompleto = itemCompleto;
+    }
 
 	public String getDatapedido() {
 		return sdfD.format(datapedido);
@@ -75,6 +84,9 @@ public class Pedido {
 	public String getTotalF() {
 		return Numero.formata(total,2);
 	}
+	public String getPrecoUnitarioF() {
+		return Numero.formata(precounitario,2);
+	}
 	public void setTotal(double total) {
 		this.total = total;
 	}
@@ -83,15 +95,16 @@ public class Pedido {
         return sdfH.format(datapedido);
 	}
 
-	public void addItem(Menu menu){
+	public void addItem(Menu menu, MenuPrincipal mp){
         this.item += (l_menu.size() == 0?"":" - ") + menu.getNome();
-        this.itemdescricao += (l_menu.size() == 0?"":" - ") + menu.getDescricao();
+        this.itemdescricao += (l_menu.size() == 0 || menu.getDescricao().equals("")?"":" - ") + menu.getDescricao();
+        this.itemCompleto += (itemCompleto.equals("")?mp.getNome() + " - ":" | ") + menu.getNome() + " (" + menu.getDescricao() + ")";
 		l_menu.add(menu);
 	}
 	
 	public void addItemadd(Adicionais adicionais, boolean recalcula){
         this.itemadd += (l_adicionais.size() == 0?"":" - ") + adicionais.getNome();
-        this.itemadddescricao += (l_adicionais.size() == 0?"":" - ") + adicionais.getDescricao();
+        this.itemadddescricao += (l_adicionais.size() == 0 || adicionais.getDescricao().equals("") ?"":" - ") + adicionais.getDescricao();
 		l_adicionais.add(adicionais);
 		if(recalcula){
 			precoadicionais += adicionais.getPreco();
@@ -230,6 +243,7 @@ public class Pedido {
             obj.put("mesa.id", Util.leSessao(ctx, "mesa"));
             obj.put("usuario.id", Util.leSessao(ctx, "usuario_id"));
             obj.put("dispositivo", Util.leSessao(ctx, "dispositivo"));
+            obj.put("itemCompleto", itemCompleto);
             obj.put("item", item);
             obj.put("itemDescricao", itemdescricao);
             obj.put("itemAdicional", itemadd);
@@ -240,9 +254,34 @@ public class Pedido {
             obj.put("usuarioCodigo", usuario);
             obj.put("situacao", "C");
             obj.put("qtde", qtde);
+            obj.put("qtdeItem", l_menu.size());
             obj.put("preco", precounitario);
             obj.put("precoAdicionais", precoadicionais);
             obj.put("total", total);
+            JSONArray add = new JSONArray();
+            for(Adicionais o: l_adicionais){
+                JSONObject objAdd = new JSONObject();
+                objAdd.put("estab.id", Util.leSessao(ctx, "estab"));
+                objAdd.put("adicionais.id", o.getId());
+                objAdd.put("nome", o.getNome());
+                objAdd.put("descricao", o.getDescricao());
+                objAdd.put("preco", o.getPreco());
+                add.put(objAdd);
+            }
+            obj.put("add",add.toString());
+            JSONArray itens = new JSONArray();
+            for(Menu o: l_menu){
+                JSONObject objItens = new JSONObject();
+                objItens.put("estab.id", Util.leSessao(ctx, "estab"));
+                objItens.put("menu.id", o.getId());
+                objItens.put("nome", o.getNome());
+                objItens.put("descricao", o.getDescricao());
+                objItens.put("preco", precounitario / l_menu.size());
+                objItens.put("qtde", qtde);
+                objItens.put("total", total / l_menu.size());
+                itens.put(objItens);
+            }
+            obj.put("itens",itens.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }

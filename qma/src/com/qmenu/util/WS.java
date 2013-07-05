@@ -26,7 +26,8 @@ public class WS extends AsyncTask<String, String, String> {
     private AsyncTaskCompleteListener<String> callback;
     private ProgressDialog progress;
 //    private static String url = "http://10.0.1.3:8090/qmw/trocadados/";
-    private static String url = "http://192.168.0.5:8090/qmw/trocadados/";
+//    private static String url = "http://192.168.0.5:8090/qmw/trocadados/";
+    private static String url = "http://www.qmenu.com.br:8080/qmw/interface/";
     private static String chave = "823742jnkjdshfsa[sdf'sasd[]adf]084ASFF";
     private String action;
     private Context ctx;

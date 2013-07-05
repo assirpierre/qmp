@@ -43,7 +43,7 @@ public class EfetuaPedido extends Activity
 		TextView txDescricao = (TextView) findViewById(R.id.txDescricao);
 		txDescricao.setText(pedido.getItemdescricao());
 		TextView txPrecoUnitario = (TextView) findViewById(R.id.txPrecoUnitario);
-		txPrecoUnitario.setText(getString(R.string.strPrecoUnitarioPedido) + " " + pedido.getMenuSelecionado().getPrecoF());
+		txPrecoUnitario.setText(getString(R.string.strPrecoUnitarioPedido) + " " + pedido.getPrecoUnitarioF());
 		txTotal = (TextView) findViewById(R.id.txTotal);		
 		upButton = (Button) findViewById(R.id.upButton);
 		downButton = (Button) findViewById(R.id.downButton);
@@ -72,7 +72,7 @@ public class EfetuaPedido extends Activity
 			}
 		});
 		Button btAdicionais = (Button) findViewById(R.id.btAdicionais);
-		if(pedido.getMenuSelecionado().getGrupoAdicionaisId() == null)
+		if(pedido.getL_menu().get(0).getGrupoAdicionaisId() == null)
 			btAdicionais.setVisibility(View.GONE);
 		btAdicionais.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {		
@@ -104,7 +104,6 @@ public class EfetuaPedido extends Activity
         	downButton.setEnabled(false);
         	upButton.setEnabled(false);
         	edObs.setEnabled(false);
-            btAdicionais.setEnabled(false);
         }
         imgView = (ImageView)findViewById(R.id.imgItem);
         ImageLoader.getInstance().load(imgView, "http://www.qmenu.com.br:8080/upload/qmenu/" + Util.leSessao(EfetuaPedido.this, "estab") + "/" + pedido.getMenuSelecionado().getId() + ".jpg", false);

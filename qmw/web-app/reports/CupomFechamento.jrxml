@@ -148,7 +148,7 @@ $F{estab.estado} + " - " + $F{estab.telefone}]]></textFieldExpression>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{situacao}.equals("D")?"--D-- ":"") +
-$F{item} + ($F{itemAdicional}.equals("")?"":" a:" + $F{itemAdicional})]]></textFieldExpression>
+$F{item} + ($F{itemAdicional}==null?"":"\n    AD:" + $F{itemAdicional})]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
 				<reportElement uuid="3339ba2a-6457-4730-bc80-bc0e3ef36bd8" x="168" y="0" width="36" height="12"/>
@@ -170,7 +170,7 @@ $F{item} + ($F{itemAdicional}.equals("")?"":" a:" + $F{itemAdicional})]]></textF
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="103">
+		<band height="81">
 			<textField pattern="###0.00">
 				<reportElement uuid="11f3734f-dc87-4cc7-8a65-11e6d2a1ac55" x="133" y="20" width="71" height="10"/>
 				<textElement textAlignment="Right">
@@ -220,23 +220,22 @@ $F{item} + ($F{itemAdicional}.equals("")?"":" a:" + $F{itemAdicional})]]></textF
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement uuid="9cc1a557-9396-49e1-97d6-89b8e3359a8f" x="2" y="91" width="202" height="10"/>
+				<reportElement uuid="9cc1a557-9396-49e1-97d6-89b8e3359a8f" x="2" y="70" width="202" height="10"/>
 				<textElement textAlignment="Center" markup="none">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{rodapeCupom}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="7ca84933-4a44-4b5b-9ee3-a10b8b7149e0" x="19" y="35" width="173" height="56"/>
+				<reportElement uuid="7ca84933-4a44-4b5b-9ee3-a10b8b7149e0" x="19" y="35" width="173" height="35"/>
 				<textElement markup="none">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Favor informar CPJ/CNPJ (Facultativo) para constar no cupom fiscal.
-Lei Estadual n. 12.685 de 28 de agosto de 2007 referente a nota fiscal paulista
 CPF/CNPJ:]]></text>
 			</staticText>
 			<line>
-				<reportElement uuid="b9121c42-74d3-49f7-ac0b-a82805293aa9" x="61" y="81" width="118" height="1"/>
+				<reportElement uuid="b9121c42-74d3-49f7-ac0b-a82805293aa9" x="61" y="62" width="118" height="1"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineStyle="Solid"/>
 				</graphicElement>
