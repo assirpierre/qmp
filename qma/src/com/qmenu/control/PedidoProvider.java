@@ -39,10 +39,11 @@ public class PedidoProvider {
 	public static void atualiza(String jsonStr){
         try{
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            h_pedido = new HashMap<Integer, Pedido>();
+            pedido = new ArrayList<Pedido>();
             JSONArray jsonArray = new JSONArray(jsonStr);
             if(jsonArray.length() > 0){
                 total = 0;
-                pedido = new ArrayList<Pedido>();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject j = jsonArray.getJSONObject(i);
                     if(j.getString("class").equals("qmw.Pedido")){
